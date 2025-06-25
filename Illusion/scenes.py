@@ -1,9 +1,9 @@
 import pygame
 
-from Aran import ui
-from Aran.frame_data_f import FrameData
+from Illusion import ui
+from Illusion.frame_data_f import FrameData
 import globals as g
-from Aran.importer import Importer, Assets
+from Illusion.importer import Importer, Assets
 
 
 class Scene:
@@ -56,7 +56,7 @@ class Scene:
 class MainMenuSc(Scene):
     def __init__(self,importer: Importer, assets: Assets):
         super().__init__(importer, assets)
-        self.fill_color = (255,0,0)
+        self.fill_color = (255,255,255)
 
 class LoadSc(Scene):
     def __init__(self, importer: Importer, assets: Assets):
@@ -64,7 +64,7 @@ class LoadSc(Scene):
         self._uis[0].new_animation("logo",importer.get_animated_sprite("logo"),(g.WINDOW_WIDTH / 2, g.WINDOW_HEIGHT / 2),10,1)
         importer.get_sound("logo_sound").play()
         self.anim_cooldown = 0
-        self.fill_color = (180,180,200)
+        self.fill_color = (0,80,90)
 
     def _update(self, frame_data: FrameData):
         if self._uis[0].get_animation("logo").is_done():

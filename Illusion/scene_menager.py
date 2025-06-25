@@ -1,7 +1,7 @@
 import pygame
 
 import globals as g
-from Aran.scenes import Scene
+from Illusion.scenes import Scene
 from frame_data_f import FrameData
 
 
