@@ -1,0 +1,6 @@
+# window data
+WINDOW_WIDTH,WINDOW_HEIGHT = 600,600
+
+# scenes
+SC_LOAD = 0
+SC_MAIN_MENU = 1
