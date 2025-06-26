@@ -141,6 +141,8 @@ class UI:
                     else:
                         self.on_click(data)
                         self.reset()
+                if self.current_state == self.State.HOVERED:
+                    frame_data.hovers = True
                 self.lag_frame = False
 
             def reset(self):
@@ -163,7 +165,6 @@ class UI:
                         self.rect.center[1] - self.text_surface[self.current_state.value].get_height()/2
                     )
                     surface.blit(self.text_surface[self.current_state.value],dest_)
-                pygame.draw.rect(surface,(255,0,0),self.rect,2)
 
         class ChangeScButton(Button):
             def __init__(self, identifier: str, center_pos: pygame.Vector2, rect_size: tuple[float, float],
@@ -185,7 +186,7 @@ class UI:
             for button in self.buttons:
                 button.draw(surface)
 
-    def new_test_button(self, identifier: str, center_pos: pygame.Vector2,size = tuple[float,float],sprites = list,sound: pygame.mixer.Sound = None,delay: float = None,rendered_text: list = None):
+    def new_test_button(self, identifier: str, center_pos: pygame.Vector2,size: tuple[float,float],sprites: list,sound: pygame.mixer.Sound = [None,None],delay: float = None,rendered_text: list = None):
         self._gui.buttons.append(
             self._gui.Button(
                 identifier,
@@ -195,6 +196,19 @@ class UI:
                 sound,
                 delay,
                 rendered_text
+            )
+        )
+
+    def new_scene_change_button(self,identifier: str, center_pos: pygame.Vector2,size: tuple[float,float],sprites: list,scene_to_change_to,sound: pygame.mixer.Sound = [None,None],delay: float = None,rendered_text: list = None):
+        self._gui.buttons.append(
+            self._gui.ChangeScButton(
+                identifier,
+                center_pos,
+                size,
+                sprites,
+                scene_to_change_to,
+                sound,
+                delay
             )
         )
 

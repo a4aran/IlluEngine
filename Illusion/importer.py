@@ -12,20 +12,41 @@ class Importer:
             ''   # sound prefix
         ]
 
-    def import_img(self, name: str, path: str, result_size: tuple[int, int]):
+    def import_img(self, name: str, path: str, result_size: tuple[int, int] | int):
         src_img = pygame.image.load(self.__prefix[0] + path).convert_alpha()
-        img = pygame.transform.scale(src_img, result_size)
+        if result_size is tuple:
+            img = pygame.transform.scale(src_img, result_size)
+        else:
+            rs = (
+                src_img.get_width() * result_size,
+                src_img.get_height() * result_size
+            )
+            img = pygame.transform.scale(src_img, rs)
         self.__sprites[name] = img
 
-    def import_animated_sprite(self, name: str, path: str, frames_amount: int, result_frame_size: tuple[int, int]):
-        width = frames_amount * result_frame_size[0]
+    def import_animated_sprite(self, name: str, path: str, frames_amount: int,
+                               result_frame_size: tuple[int, int] | float):
         src_img = pygame.image.load(self.__prefix[1] + path).convert_alpha()
-        img = pygame.transform.scale(src_img, (width, result_frame_size[1]))
+
+        if isinstance(result_frame_size, tuple):
+            rfs = result_frame_size
+            width = frames_amount * rfs[0]
+            height = rfs[1]
+        else:
+            scale = result_frame_size
+            rfs = (
+                int(src_img.get_width() / frames_amount * scale),
+                int(src_img.get_height() * scale)
+            )
+            width = frames_amount * rfs[0]
+            height = rfs[1]
+
+        img = pygame.transform.scale(src_img, (width, height))
 
         frames = []
         for f in range(frames_amount):
-            frame = pygame.Surface(result_frame_size, pygame.SRCALPHA)
-            frame.blit(img, (0, 0), (f * result_frame_size[0], 0, *result_frame_size))
+            frame = pygame.Surface(rfs, pygame.SRCALPHA)
+            frame.blit(img, (0, 0), (f * rfs[0], 0, *rfs))
             frames.append(frame)
 
         self.__animated_sprites[name] = frames

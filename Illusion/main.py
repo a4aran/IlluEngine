@@ -14,6 +14,7 @@ frame_data = Fd()
 while game_on:
     frame_data.dt = clock.tick(240) / 1000
     frame_data.reset_mbtn()
+    frame_data.hovers = False
 
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
@@ -32,6 +33,11 @@ while game_on:
     frame_data.mouse_buttons = pygame.mouse.get_pressed()
 
     game.update_and_draw(frame_data,window)
+
+    if frame_data.hovers:
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+    else:
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
     pygame.display.flip()
 

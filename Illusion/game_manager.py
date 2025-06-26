@@ -13,8 +13,6 @@ class GameManager:
         self.__importer = Importer()
         self.__assets = Assets()
 
-        self.__m6x11_font_text_renderer = TextRenderer("m6x11plus.ttf")
-
         self.__importer.set_img_prefix("../assets/textures")
         self.__importer.set_animated_sprite_prefix("../assets/textures/animated/")
         self.__importer.set_sound_prefix("../assets/sounds/")
