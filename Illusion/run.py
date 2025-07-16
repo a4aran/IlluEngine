@@ -1,12 +1,14 @@
 import pygame
+
+from game import Game
+
 pygame.init()
 pygame.mixer.init()
 from frame_data_f import FrameData as Fd
 import globals as g
-from game_manager import GameManager
 
 window = pygame.display.set_mode((g.WINDOW_WIDTH,g.WINDOW_HEIGHT))
-game = GameManager()
+game_o = Game()
 
 clock = pygame.time.Clock()
 game_on = True
@@ -32,7 +34,7 @@ while game_on:
     frame_data.mouse_pos = pygame.mouse.get_pos()
     frame_data.mouse_buttons = pygame.mouse.get_pressed()
 
-    game.update_and_draw(frame_data,window)
+    game_o.update_and_draw(frame_data, window)
 
     if frame_data.hovers:
         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)

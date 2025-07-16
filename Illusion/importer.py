@@ -14,7 +14,7 @@ class Importer:
 
     def import_img(self, name: str, path: str, result_size: tuple[int, int] | int):
         src_img = pygame.image.load(self.__prefix[0] + path).convert_alpha()
-        if result_size is tuple:
+        if isinstance(result_size, tuple):
             img = pygame.transform.scale(src_img, result_size)
         else:
             rs = (
