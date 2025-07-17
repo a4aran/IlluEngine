@@ -1,6 +1,8 @@
 import pygame
 from enum import Enum
 
+from pygame import SRCALPHA
+
 from frame_data_f import FrameData
 
 
@@ -14,6 +16,66 @@ class UI:
     class _HUD:
         def __init__(self):
             self.surface_s = []
+
+        class Parallax:
+            def __init__(self,name: str, top_left:tuple[float,float],img: pygame.Surface,
+                         speed: float,size: tuple[float,float],direction: int = 0,step: float = 0):
+                self.name = name
+                self.parllax_pos = pygame.Vector2(top_left)
+                self.img_pos = 0
+                self.img = img
+                self.speed = speed
+                self.parallax_window_size = size
+                self.direction = direction
+                self.carry = 0
+                self.step = step
+
+            def update(self,frame_data: FrameData):
+                self.carry += self.speed * frame_data.dt
+                if self.carry >= self.step:
+                    self.img_pos += self.carry
+                else:
+                    return
+                self.carry = 0
+                axis_size = self.img.get_width()
+                if self.direction == 2 or self.direction == 3:
+                    axis_size = self.img.get_height()
+                if self.img_pos >= axis_size: self.img_pos = 0
+
+            def gen_frame(self):
+                r_surf = pygame.Surface(self.parallax_window_size,SRCALPHA)
+                if self.direction == 0 or self.direction == 1:
+                    img_width = self.img.get_width()
+                    repetitions = 2 + int(self.parallax_window_size[0] % img_width)
+                    if self.direction == 0:
+                        loc_pos = self.img_pos - img_width
+                        for q in range(repetitions):
+                            r_surf.blit(self.img,(loc_pos,0))
+                            loc_pos += img_width
+                    else:
+                        loc_pos = r_surf.get_width() + img_width - self.img_pos
+                        for q in range(repetitions):
+                            r_surf.blit(self.img,(loc_pos,0))
+                            loc_pos -= img_width
+
+                elif self.direction == 2 or self.direction == 3:
+                    img_height = self.img.get_height()
+                    repetitions = 1 + int(self.parallax_window_size[1] % img_height)
+                    if self.direction == 2:
+                        loc_pos = self.img_pos - img_height
+                        for q in range(repetitions):
+                            r_surf.blit(self.img,(0,loc_pos))
+                            loc_pos += img_height
+                    else:
+                        loc_pos = r_surf.get_width() + img_height - self.img_pos
+                        for q in range(repetitions):
+                            r_surf.blit(self.img,(0,loc_pos))
+                            loc_pos -= img_height
+
+                return  r_surf.convert_alpha()
+
+            def draw(self,surface: pygame.Surface):
+                surface.blit(self.gen_frame(),self.parllax_pos)
 
         class Img:
             def __init__(self,center_pos: tuple[float,float],img: pygame.Surface):
@@ -66,7 +128,7 @@ class UI:
 
         def update(self,frame_data: FrameData):
             for surface in self.surface_s:
-                if isinstance(surface,self.Animation):
+                if isinstance(surface,self.Animation) or isinstance(surface,self.Parallax):
                     surface.update(frame_data)
 
         def find_animation(self,name:str):
@@ -199,6 +261,9 @@ class UI:
             )
         )
 
+    def add_custom_button(self, button: _GUI.Button):
+        self._gui.buttons.append(button)
+
     def new_scene_change_button(self,identifier: str, center_pos: pygame.Vector2,size: tuple[float,float],sprites: list,scene_to_change_to,sound: pygame.mixer.Sound = [None,None],delay: float = None,rendered_text: list = None):
         self._gui.buttons.append(
             self._gui.ChangeScButton(
@@ -230,6 +295,12 @@ class UI:
             )
         )
 
+    def new_parallax(self, name:str,top_left:tuple[float,float],img: pygame.Surface,speed: float, size: tuple[float,float],direction: int = 0,step: float = 0):
+        self._hud.surface_s.append(
+            self._hud.Parallax(
+                name,top_left, img, speed, size,direction, step
+            )
+        )
     def get_animation(self,name:str):
         return  self._hud.find_animation(name)
 
@@ -240,3 +311,6 @@ class UI:
     def draw(self,surface: pygame.Surface):
         self._hud.draw(surface)
         self._gui.draw(surface)
+
+    def get_gui(self):
+        return self._GUI

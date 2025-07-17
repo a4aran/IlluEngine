@@ -2,7 +2,6 @@ import pygame
 
 from Illusion import ui
 from Illusion.frame_data_f import FrameData
-import globals as g
 from Illusion.importer import Importer, Assets
 
 

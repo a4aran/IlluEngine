@@ -1,13 +1,13 @@
 import pygame
 
+import window_size
 from game import Game
 
 pygame.init()
 pygame.mixer.init()
 from frame_data_f import FrameData as Fd
-import globals as g
 
-window = pygame.display.set_mode((g.WINDOW_WIDTH,g.WINDOW_HEIGHT))
+window = pygame.display.set_mode((window_size.width,window_size.height))
 game_o = Game()
 
 clock = pygame.time.Clock()

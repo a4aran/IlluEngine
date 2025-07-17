@@ -1,6 +1,6 @@
 import pygame
 
-import globals as g
+import engine_constants as g
 from Illusion.scene import Scene
 from frame_data_f import FrameData
 
