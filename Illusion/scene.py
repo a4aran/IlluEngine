@@ -46,8 +46,11 @@ class Scene:
         self.data["should_change_scene"] = should_change
         self.data["scene_to_change_to"] = scene_to_change_to
 
-    def __ui_index_from_id(self, id: str):
+    def _ui_index_from_id(self, id: str):
         for i, ui_o in enumerate(self._uis):
             if ui_o.id == id:
                 return i
         return -1
+
+    def create_ui(self,identifier: str):
+        self._uis.append(ui.UI(identifier))

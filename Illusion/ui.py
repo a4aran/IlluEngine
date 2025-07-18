@@ -11,7 +11,6 @@ class UI:
         self.id = id
         self._hud = self._HUD()
         self._gui = self._GUI()
-        self.data = {}
 
     class _HUD:
         def __init__(self):
@@ -21,7 +20,7 @@ class UI:
             def __init__(self,name: str, top_left:tuple[float,float],img: pygame.Surface,
                          speed: float,size: tuple[float,float],direction: int = 0,step: float = 0):
                 self.name = name
-                self.parllax_pos = pygame.Vector2(top_left)
+                self.parallax_pos = pygame.Vector2(top_left)
                 self.img_pos = 0
                 self.img = img
                 self.speed = speed
@@ -75,7 +74,7 @@ class UI:
                 return  r_surf.convert_alpha()
 
             def draw(self,surface: pygame.Surface):
-                surface.blit(self.gen_frame(),self.parllax_pos)
+                surface.blit(self.gen_frame(), self.parallax_pos)
 
         class Img:
             def __init__(self,center_pos: tuple[float,float],img: pygame.Surface):
@@ -314,3 +313,19 @@ class UI:
 
     def get_gui(self):
         return self._GUI
+
+    def data(self):
+        return self._gui.data
+
+    def delete_var_from_data(self,var_name: str):
+        if var_name in self._gui.data:
+            self._gui.data.pop(var_name)
+        else:
+            print("No variable " + var_name + " in data")
+
+    def modify_parallax(self,parallax_name: str,speed = None, stepping = None, direction = None):
+        for par in self._hud.surface_s:
+            if isinstance(par, self._HUD.Parallax) and par.name == parallax_name:
+                if speed is not None: par.speed = speed
+                if stepping is not None: par.step = stepping
+                if direction is not None: par.direction = direction
