@@ -2,16 +2,17 @@ import pygame
 
 from Illusion import ui
 from Illusion.frame_data_f import FrameData
-from Illusion.importer import Importer, Assets
+from Illusion.importer import Importer, Assets, MusicManager
 
 
 class Scene:
-    def __init__(self,importer: Importer,assets: Assets):
+    def __init__(self,importer: Importer,assets: Assets,music_manager: MusicManager):
         self._objs = []
         self._uis = [ui.UI("default")]
         self.data = {}
         self.__clear_data()
         self.fill_color = (0,0,0)
+        self._music_manager = music_manager
 
     def _update(self, frame_data: FrameData):
         for o in self._objs:

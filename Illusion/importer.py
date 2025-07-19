@@ -94,3 +94,53 @@ class Assets:
 
     def get_animated_sprites(self,name:str):
         return self.__animated_sprites[name]
+
+class MusicManager:
+    def __init__(self):
+        self._tracks = {}
+        self._prefix = ""
+        self._volume = 100
+        self._mute = False
+
+    def add_track(self,name: str, path: str):
+        self._tracks[name] = self._prefix + path
+
+    def remove_track(self,name: str):
+        self._tracks.pop(name)
+
+    def play_track(self,name:str):
+        if not name in self._tracks:
+            print("Couldn't find track")
+            return
+        pygame.mixer.music.unload()
+        pygame.mixer.music.load(self._tracks[name])
+        pygame.mixer.music.play(1)
+        if self._mute:
+            pygame.mixer.music.set_volume(0)
+            return
+        pygame.mixer.music.set_volume(self._volume / 100)
+
+    def set_path_prefix(self,prefix: str):
+        self._prefix = prefix
+
+    @staticmethod
+    def unload_all():
+        pygame.mixer.music.unload()
+
+    @staticmethod
+    def pause():
+        pygame.mixer.music.pause()
+
+    @staticmethod
+    def unpause():
+        pygame.mixer.music.unpause()
+
+    def set_volume(self,amount: int):
+        self._volume = max(min(amount,100),0)
+
+    def change_volume_by(self,amount: int): # if you wanna decrease the volume enter negative number
+        self._volume += amount
+        self._volume = max(min(amount, 100), 0)
+
+    def toggle_mute(self):
+        self._mute = not self._mute

@@ -36,3 +36,6 @@ Fixed the **data** in UI so that it actually works, I deleted the field from UI 
 <br>
 Made **_parallax_** 'responsive', as in you can change the speed and things like that.
 
+## Version 0.0.1su.2
+Added better system for music by implementing _**Music Manager**_
+

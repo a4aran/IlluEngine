@@ -1,10 +1,10 @@
 import pygame
 
+pygame.init()
+pygame.mixer.init()
 import window_size
 from game import Game
 
-pygame.init()
-pygame.mixer.init()
 from frame_data_f import FrameData as Fd
 
 window = pygame.display.set_mode((window_size.width,window_size.height))
