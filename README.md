@@ -39,3 +39,6 @@ Made **_parallax_** 'responsive', as in you can change the speed and things like
 ## Version 0.0.1su.2
 Added better system for music by implementing _**Music Manager**_
 
+## Version 0.0.1su.2b _hotfix_
+Added _**resync_volume**_ method so that the muting is applied correctly
+

@@ -115,10 +115,7 @@ class MusicManager:
         pygame.mixer.music.unload()
         pygame.mixer.music.load(self._tracks[name])
         pygame.mixer.music.play(-1)
-        if self._mute:
-            pygame.mixer.music.set_volume(0)
-            return
-        pygame.mixer.music.set_volume(self._volume / 100)
+        self.resync_volume()
 
     def set_path_prefix(self,prefix: str):
         self._prefix = prefix
@@ -144,3 +141,10 @@ class MusicManager:
 
     def toggle_mute(self):
         self._mute = not self._mute
+        self.resync_volume()
+
+    def resync_volume(self):
+        if self._mute:
+            pygame.mixer.music.set_volume(0)
+        else:
+            pygame.mixer.music.set_volume(self._volume / 100)
