@@ -114,7 +114,7 @@ class MusicManager:
             return
         pygame.mixer.music.unload()
         pygame.mixer.music.load(self._tracks[name])
-        pygame.mixer.music.play(1)
+        pygame.mixer.music.play(-1)
         if self._mute:
             pygame.mixer.music.set_volume(0)
             return
