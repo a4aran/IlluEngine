@@ -42,3 +42,7 @@ Added better system for music by implementing _**Music Manager**_
 ## Version 0.0.1su.2b _hotfix_
 Added _**resync_volume**_ method so that the muting is applied correctly
 
+## Version 0.0.2su
+All files that are important for the engines work come inside the _**Illusion**_ package.<br>
+Only exception are **_game.py_** and **_window_size.py_** as they are meant ot be edited by the user.
+
