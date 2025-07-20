@@ -145,9 +145,9 @@ class UI:
         def __init__(self):
             self.buttons = []
             self.data = {}
-            self.__clear_data()
+            self.clear_data()
 
-        def __clear_data(self):
+        def clear_data(self):
             self.data = {
                 "should_change_scene": False,
                 "scene_to_change_to": 0
@@ -229,8 +229,8 @@ class UI:
 
         class ChangeScButton(Button):
             def __init__(self, identifier: str, center_pos: pygame.Vector2, rect_size: tuple[float, float],
-                         animated_sprite: list, scene_to_change_to: int, sound: pygame.mixer.Sound = None, delay=None):
-                super().__init__(identifier, center_pos, rect_size, animated_sprite, sound, delay)
+                         animated_sprite: list, scene_to_change_to: int, sound: pygame.mixer.Sound = None, delay=None, rendered_text: list = None):
+                super().__init__(identifier, center_pos, rect_size, animated_sprite, sound, delay,rendered_text)
                 self.scene = scene_to_change_to
 
             def on_click(self, data:dict):
@@ -272,7 +272,8 @@ class UI:
                 sprites,
                 scene_to_change_to,
                 sound,
-                delay
+                delay,
+                rendered_text
             )
         )
 
@@ -316,6 +317,9 @@ class UI:
 
     def data(self):
         return self._gui.data
+
+    def reset_data(self):
+        self._gui.clear_data()
 
     def delete_var_from_data(self,var_name: str):
         if var_name in self._gui.data:

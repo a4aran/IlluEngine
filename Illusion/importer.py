@@ -98,6 +98,7 @@ class Assets:
 class MusicManager:
     def __init__(self):
         self._tracks = {}
+        self._current_track = None
         self._prefix = ""
         self._volume = 100
         self._mute = False
@@ -114,15 +115,16 @@ class MusicManager:
             return
         pygame.mixer.music.unload()
         pygame.mixer.music.load(self._tracks[name])
+        self._current_track = name
         pygame.mixer.music.play(-1)
         self.resync_volume()
 
     def set_path_prefix(self,prefix: str):
         self._prefix = prefix
 
-    @staticmethod
-    def unload_all():
+    def unload_all(self):
         pygame.mixer.music.unload()
+        self._current_track = None
 
     @staticmethod
     def pause():
@@ -148,3 +150,6 @@ class MusicManager:
             pygame.mixer.music.set_volume(0)
         else:
             pygame.mixer.music.set_volume(self._volume / 100)
+
+    def get_current_track(self):
+        return self._current_track
