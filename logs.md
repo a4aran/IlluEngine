@@ -1,4 +1,7 @@
 # Logs
+
+## [Current Verison](#version-002su1-bugfix)
+
 ## Version 0.0.1su.1
 Added ***Parallax*** and a way to make ***Custom Buttons***<br>
 Also changed ***globals.py*** to ***engine_constants.py*** 
@@ -38,8 +41,14 @@ Only exception are **_game.py_** and **_window_size.py_** as they are meant ot b
 ## Version 0.0.2su.1 _bugfix_
 Added new class **_GlobalsObjects_** whose object is automatically created in _**GameManager**_ similarly to classes from _**importer.py**_.
 <br>
+<br>
 Made _**UI**_ work better in scenes. Added method to _**scene**_ called **_get_data_from_uis_**, which changes the scene's _change scene_ related **data**.
+<br>
 <br>
 Fixed a bug in _**SceneManager**_ where it would change the scene to _should_change_scene_ data of the scene instead of _scene_to_change_to_.
 <br>
+<br>
 Fixed a bug/oversight where the **_Scene Change Button_** didn't have **rendered_text** in their constructor.
+<br>
+<br>
+Added **current_track** field to the _**MusicManager**_
