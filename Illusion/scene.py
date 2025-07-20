@@ -37,7 +37,7 @@ class Scene:
     def on_changed_from(self):
         self.__clear_data()
 
-    def on_changed_to(self):
+    def on_changed_to(self,previous_scene_id):
         pass
 
     def __clear_data(self):

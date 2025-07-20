@@ -10,6 +10,7 @@ class SceneManager:
         self.__scenes = []
         self.__active_scene = g.SC_LOAD
         self.__sc_data = {}
+        self.__previous_scene = 0
 
     def update_and_draw(self,frame_data: FrameData,surface: pygame.Surface):
         self.__get_data_from_scene()
@@ -22,8 +23,9 @@ class SceneManager:
 
     def __change_scene(self,scene_id: int):
         self.__scenes[self.__active_scene].on_changed_from()
+        self.__previous_scene = self.__active_scene
         self.__active_scene = scene_id
-        self.__scenes[self.__active_scene].on_changed_to()
+        self.__scenes[self.__active_scene].on_changed_to(self.__previous_scene)
 
     def add_scene(self,scene: Scene):
         self.__scenes.append(scene)

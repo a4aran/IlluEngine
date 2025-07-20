@@ -1,6 +1,6 @@
 # Logs
 
-## [Current Verison](#version-002su1-bugfix)
+## [Current Verison](#version-002su1b-bugfix)
 
 ## Version 0.0.1su.1
 Added ***Parallax*** and a way to make ***Custom Buttons***<br>
@@ -38,7 +38,7 @@ Added _**resync_volume**_ method so that the muting is applied correctly
 All files that are important for the engines work come inside the _**Illusion**_ package.<br>
 Only exception are **_game.py_** and **_window_size.py_** as they are meant ot be edited by the user.
 
-## Version 0.0.2su.1 _bugfix_
+## Version 0.0.2su.1
 Added new class **_GlobalsObjects_** whose object is automatically created in _**GameManager**_ similarly to classes from _**importer.py**_.
 <br>
 <br>
@@ -52,3 +52,8 @@ Fixed a bug/oversight where the **_Scene Change Button_** didn't have **rendered
 <br>
 <br>
 Added **current_track** field to the _**MusicManager**_
+
+## Version 0.0.2.1b _bugfix_
+You can now get the volume value from **_MusicManager_** and see the **id** of previous scene. The _**on_changed_to**_ method of **_Scene_** now accepts mentioned **id** of previous scene.
+<br>
+Added **_resync_volume_** to methods that edit volume. Fixed **_change_volume_by_**'s method. 

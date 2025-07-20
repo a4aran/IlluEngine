@@ -136,10 +136,15 @@ class MusicManager:
 
     def set_volume(self,amount: int):
         self._volume = max(min(amount,100),0)
+        self.resync_volume()
 
     def change_volume_by(self,amount: int): # if you wanna decrease the volume enter negative number
         self._volume += amount
-        self._volume = max(min(amount, 100), 0)
+        self._volume = max(min(self._volume, 100), 0)
+        self.resync_volume()
+
+    def get_volume_value(self):
+        return self._volume
 
     def toggle_mute(self):
         self._mute = not self._mute
