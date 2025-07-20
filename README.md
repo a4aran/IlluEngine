@@ -9,5 +9,5 @@ In order to download **Illusion** click ***CODE*** button and ***Download ZIP***
 
 For more info click [here](https://github.com/a4aran/IllusionEngine/wiki)
 
-For change log click [here]()
+For change log click [here](https://github.com/a4aran/IllusionEngine/blob/logs)
 
