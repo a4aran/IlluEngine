@@ -4,10 +4,9 @@
 
 **Illusion Engine** is a project with a goal to make python game development easier.
 
-## Download
-In order to download **Illusion** click ***CODE*** button and ***Download ZIP*** in the list
+## [Download Latest Version](https://github.com/a4aran/IllusionEngine/releases/latest)
 
-For more info click [here](https://github.com/a4aran/IllusionEngine/wiki)
+## [Illusion Wiki](https://github.com/a4aran/IllusionEngine/wiki)
 
-For change log click [here](https://github.com/a4aran/IllusionEngine/blob/master/logs.md)
+## [Change Logs](https://github.com/a4aran/IllusionEngine/blob/master/logs.md)
 
