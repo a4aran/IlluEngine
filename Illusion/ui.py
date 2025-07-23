@@ -4,7 +4,7 @@ from enum import Enum
 from pygame import SRCALPHA
 
 from frame_data_f import FrameData
-
+from text_renderer import TextRenderer
 
 class UI:
     def __init__(self,id):
@@ -84,6 +84,82 @@ class UI:
             def draw(self,surface: pygame.Surface):
                 surface.blit(self.img,self.pos)
 
+        class TextDisplay:
+            def __init__(self,name: str,font: TextRenderer,center_pos: tuple[float,float]):
+                self.name = name
+                self.__center_pos = center_pos
+                self.__top_left_pos = None
+                self.__font = font
+                self.__text = []
+                self.__surface = None
+                self.__size = None
+                self.__color = (0, 0, 0)
+                self.__should_reload = True
+
+            def reload(self):
+                if self.__text is not None and self.__size is not None and self.__color is not None:
+                    size = [0,0]
+                    lines_s = []
+                    for line in self.__text:
+                        temp = self.__font.render(line, self.__size, self.__color).convert_alpha()
+                        lines_s.append(temp)
+                        size[1] += temp.get_height()
+                        size[0] = max(size[0],temp.get_width())
+                    self.__surface = pygame.Surface(size,SRCALPHA)
+                    y_pos = 0
+                    for surf in lines_s:
+                        l_x_pos = size[0]/2 - surf.get_width()/2
+                        self.__surface.blit(surf,(l_x_pos,y_pos))
+                        y_pos += surf.get_height()
+                    self.__top_left_pos = (self.__center_pos[0] - self.__surface.get_width() / 2,
+                           self.__center_pos[1] - self.__surface.get_height() / 2)
+                    self.__should_reload = False
+                else:
+                    raise AttributeError("Lack of attributes Text || Size || Color")
+
+            def add_line(self, text: str):
+                self.__text.append(text)
+                self.__should_reload = True
+
+            def change_line(self,line_number: int, text:str):
+                self.__text[line_number] = text
+                self.__should_reload = True
+
+            def delete_line(self,line_number: int):
+                self.__text.pop(line_number)
+                self.__should_reload = True
+
+            def set_size(self, size: int):
+                self.__size = size
+                self.__should_reload = True
+
+            def set_color(self,color: tuple[int,int,int]):
+                self.__color = color
+                self.__should_reload = True
+
+            def set_pos(self,center_pos: tuple[float,float]):
+                self.__center_pos =center_pos
+
+            def change_properties(self, color: tuple[int,int,int] = None, center_pos: tuple[float,float] = None, size: int = None):
+                if color is not None: self.__color = color
+                if center_pos is not None: self.__center_pos = center_pos
+                if size is not None: self.__size = size
+                self.__should_reload = True
+
+            def set_all(self, color: tuple[int,int,int], size: int, text: list[str]):
+                self.__color = color
+                self.__size = size
+                self.__text = text
+                self.__should_reload = True
+
+            def set_text(self,text: list[str]):
+                self.__text = text
+                self.__should_reload = True
+
+            def draw(self,surface: pygame.Surface):
+                if self.__should_reload: self.reload()
+                surface.blit(self.__surface,self.__top_left_pos)
+
         class Animation:
             def __init__(self,name: str,center_pos: tuple[float,float],sprites: list,fps:int,play_amount:int = 0):
                 self.name = name
@@ -141,6 +217,17 @@ class UI:
                 return
             return self.surface_s[i]
 
+        def find_text_display(self,name:str):
+            i = None
+            for index, a in enumerate(self.surface_s):
+                if isinstance(a, self.TextDisplay):
+                    if a.name == name:
+                        i = index
+            if i is None:
+                print("'"+name+"' animation not found")
+                return
+            return self.surface_s[i]
+
     class _GUI:
         def __init__(self):
             self.buttons = []
@@ -160,7 +247,7 @@ class UI:
                 PRESSED = 2
 
             def __init__(self, identifier: str, center_pos: pygame.Vector2, rect_size: tuple[float,float], animated_sprite: list,
-                         sound: list[pygame.mixer.Sound,pygame.mixer.Sound] = [None,None], delay:float = None, rendered_text: list = None):
+                         sound: list[pygame.mixer.Sound,pygame.mixer.Sound] = [None,None], delay:float = None):
                 self.identifier = identifier
                 self.rect = pygame.Rect((0,0),rect_size)
                 self.rect.center = center_pos
@@ -169,15 +256,7 @@ class UI:
                 self.sounds = sound
                 self.delay = [0,delay,False]
                 self.lag_frame = False
-                self.text_surface = rendered_text.copy() if rendered_text is not None else None
-
-                if self.text_surface is not  None:
-                    txt_l = len(self.text_surface)
-                    if txt_l < 3:
-                        for n in range(3-txt_l):
-                            self.text_surface.append(self.text_surface[0])
-
-                print(self.text_surface)
+                self.text_surface = [None,None,None]
 
             def update(self, frame_data: FrameData, data: dict):
                 if not self.delay[2]:  # If delay not started, check for hover/click
@@ -220,17 +299,33 @@ class UI:
 
             def draw(self,surface: pygame.Surface):
                 surface.blit(self.frames[self.current_state.value],self.rect.topleft)
-                if self.text_surface is not None:
+                if self.text_surface[self.current_state.value] is not None:
                     dest_ = (
                         self.rect.center[0] - self.text_surface[self.current_state.value].get_width()/2,
                         self.rect.center[1] - self.text_surface[self.current_state.value].get_height()/2
                     )
                     surface.blit(self.text_surface[self.current_state.value],dest_)
 
+            def add_text(self,text_renderer: TextRenderer ,text: str, size: int, color: tuple[int,int,int]):
+                self.text_surface = [
+                    text_renderer.render(text,size,color),
+                    text_renderer.render(text,size,color),
+                    text_renderer.render(text,size,color)
+                ]
+
+            def modify_default_text(self,text_renderer: TextRenderer ,text: str, size: int, color: tuple[int,int,int]):
+                self.text_surface[0] = text_renderer.render(text,size,color)
+
+            def modify_hover_text(self,text_renderer: TextRenderer ,text: str, size: int, color: tuple[int,int,int]):
+                self.text_surface[1] = text_renderer.render(text,size,color)
+
+            def modify_pressed_text(self,text_renderer: TextRenderer ,text: str, size: int, color: tuple[int,int,int]):
+                self.text_surface[2] = text_renderer.render(text,size,color)
+
         class ChangeScButton(Button):
             def __init__(self, identifier: str, center_pos: pygame.Vector2, rect_size: tuple[float, float],
-                         animated_sprite: list, scene_to_change_to: int, sound: pygame.mixer.Sound = None, delay=None, rendered_text: list = None):
-                super().__init__(identifier, center_pos, rect_size, animated_sprite, sound, delay,rendered_text)
+                         animated_sprite: list, scene_to_change_to: int, sound: pygame.mixer.Sound = None, delay=None):
+                super().__init__(identifier, center_pos, rect_size, animated_sprite, sound, delay)
                 self.scene = scene_to_change_to
 
             def on_click(self, data:dict):
@@ -247,23 +342,15 @@ class UI:
             for button in self.buttons:
                 button.draw(surface)
 
-    def new_test_button(self, identifier: str, center_pos: pygame.Vector2,size: tuple[float,float],sprites: list,sound: pygame.mixer.Sound = [None,None],delay: float = None,rendered_text: list = None):
-        self._gui.buttons.append(
-            self._gui.Button(
-                identifier,
-                center_pos,
-                size,
-                sprites,
-                sound,
-                delay,
-                rendered_text
-            )
-        )
+        def find_button(self, name:str) -> Button:
+            for butt in self.buttons:
+                if butt.identifier == name:
+                    return butt
 
     def add_custom_button(self, button: _GUI.Button):
         self._gui.buttons.append(button)
 
-    def new_scene_change_button(self,identifier: str, center_pos: pygame.Vector2,size: tuple[float,float],sprites: list,scene_to_change_to,sound: pygame.mixer.Sound = [None,None],delay: float = None,rendered_text: list = None):
+    def new_scene_change_button(self,identifier: str, center_pos: pygame.Vector2,size: tuple[float,float],sprites: list,scene_to_change_to,sound: pygame.mixer.Sound = [None,None],delay: float = None):
         self._gui.buttons.append(
             self._gui.ChangeScButton(
                 identifier,
@@ -273,9 +360,19 @@ class UI:
                 scene_to_change_to,
                 sound,
                 delay,
-                rendered_text
             )
         )
+
+    def add_text_to_button(self,button_name: str,text_renderer: TextRenderer ,text: str, size: int, color: tuple[int,int,int]):
+        temp = self._gui.find_button(button_name)
+        temp.add_text(text_renderer,text,size,color)
+
+    def modify_button_text(self,button_name: str,button_state: int,text_renderer: TextRenderer ,text: str, size: int, color: tuple[int,int,int]):
+        if not 3 >= button_state >= 0: raise KeyError("Button State out of bounds")
+        temp = self._gui.find_button(button_name)
+        if button_state == 0: temp.modify_default_text(text_renderer,text,size,color)
+        if button_state == 1: temp.modify_hover_text(text_renderer,text,size,color)
+        if button_state == 2: temp.modify_pressed_text(text_renderer,text,size,color)
 
     def new_img(self,img: pygame.Surface,center_pos: pygame.Vector2):
         self._hud.surface_s.append(
@@ -301,6 +398,19 @@ class UI:
                 name,top_left, img, speed, size,direction, step
             )
         )
+
+    def new_text_display(self, name: str,text_renderer: TextRenderer, center_pos: tuple[float,float]):
+        self._hud.surface_s.append(
+            self._hud.TextDisplay(
+                name,
+                text_renderer,
+                center_pos
+            )
+        )
+
+    def get_text_display(self,name: str) -> _HUD.TextDisplay:
+        return  self._hud.find_text_display(name)
+
     def get_animation(self,name:str):
         return  self._hud.find_animation(name)
 

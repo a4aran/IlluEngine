@@ -1,9 +1,8 @@
-import pygame.font
+import pygame
 
-font_prefix = "../assets/fonts/"
 
 class TextRenderer:
-    def __init__(self, font_name: str):
+    def __init__(self, font_name: str,font_prefix: str):
         self.font_path = font_prefix + font_name
         self.fonts_by_size = {}
 

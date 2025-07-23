@@ -1,6 +1,6 @@
 # Logs
 
-## [Current Verison](#version-002su1b-bugfix)
+## [Current Verison](#version-003su)
 
 ## Version 0.0.1su.1
 Added ***Parallax*** and a way to make ***Custom Buttons***<br>
@@ -57,3 +57,12 @@ Added **current_track** field to the _**MusicManager**_
 You can now get the volume value from **_MusicManager_** and see the **id** of previous scene. The _**on_changed_to**_ method of **_Scene_** now accepts mentioned **id** of previous scene.
 <br>
 Added **_resync_volume_** to methods that edit volume. Fixed **_change_volume_by_**'s method. 
+
+## Version 0.0.3su
+I improved the text renderer and all things connected to displaying text in general.
+
+What I exactly changed is how the **_TextRenderer_** objects are stored. Before you would have to create a new variable in the **_game_** but now, you can call an **_add_font_** of the _**GlobalObjects**_ class. It stores those **_TextRenderer_**s in a dict so it is easy to access unlike before.
+
+Other than that I added new class to the **_HUD_** which is **_TextDisplay_** which is just an easy way to display text. It allows to display said text in multiple lines as well as it allows the user to change most of the properties of the object whenever they want.
+
+I also changed the **_Button_** so that it is easier to make buttons with text.
