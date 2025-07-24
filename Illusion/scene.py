@@ -10,6 +10,7 @@ class Scene:
     def __init__(self,importer: Importer,assets: Assets,music_manager: MusicManager,global_objects: GlobalObjects):
         self._objs = []
         self._uis = {}
+        self._bg_uis = {}
         self.create_ui("default")
         self.data = {}
         self.__clear_data()
@@ -22,8 +23,12 @@ class Scene:
             o.update(frame_data)
         for ui in self._uis:
             self.get_ui(ui).update(frame_data)
+        for bg_ui in self._bg_uis:
+            self.get_ui(bg_ui).update(frame_data)
 
     def __draw(self,surface: pygame.Surface):
+        for bg in self._bg_uis:
+            self.get_ui(bg).draw(surface)
         for o in self._objs:
             o.draw(surface)
         for ui in self._uis:
@@ -54,19 +59,45 @@ class Scene:
                 self.edit_change_scene_data(self.get_ui(ui).data()["should_change_scene"],self.get_ui(ui).data()["scene_to_change_to"])
                 self.get_ui(ui).reset_data()
                 return
+        for bg_ui in self._bg_uis:
+            if self.get_ui(bg_ui).data()["should_change_scene"]:
+                self.edit_change_scene_data(self.get_ui(bg_ui).data()["should_change_scene"],self.get_ui(ui).data()["scene_to_change_to"])
+                self.get_ui(bg_ui).reset_data()
+                return
 
     def create_ui(self,ui_name):
         self._uis[ui_name] = ui.UI(ui_name)
 
-    def get_ui(self,ui_name) -> ui.UI:
-        if ui_name in self._uis: return self._uis[ui_name]
-        return print("Ui " + ui_name + " not found")
+    def get_ui(self, ui_name) -> ui.UI:
+        if ui_name in self._uis:
+            return self._uis[ui_name]
+        if ui_name in self._bg_uis:
+            return self._bg_uis[ui_name]
+        print(f"UI '{ui_name}' not found in either active or background UIs")
+        return None
 
     def delete_ui(self,ui_name: str):
         if ui_name in self._uis:
+            self._uis.pop(ui_name)
+            return
+        elif ui_name in self._bg_uis:
             self._uis.pop(ui_name)
             return
         print("Ui " + ui_name + " not found")
 
     def add_ui(self,ui: ui.UI):
         self._uis[ui.id] = ui
+
+    def set_ui_to_background(self, name: str):
+        ui_v = self._uis.pop(name, None)
+        if ui_v:
+            self._bg_uis[name] = ui_v
+        else:
+            print(f"UI '{name}' not found in active UI dict")
+
+    def set_background_to_ui(self, name: str):
+        bg_ui = self._bg_uis.pop(name, None)
+        if bg_ui:
+            self._uis[name] = bg_ui
+        else:
+            print(f"UI '{name}' not found in background UI dict")

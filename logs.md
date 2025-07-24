@@ -1,6 +1,6 @@
 # Logs
 
-## [Current Verison](#version-003su)
+## [Current Verison](#version-003su1)
 
 ## Version 0.0.1su.1
 Added ***Parallax*** and a way to make ***Custom Buttons***<br>
@@ -66,3 +66,8 @@ What I exactly changed is how the **_TextRenderer_** objects are stored. Before 
 Other than that I added new class to the **_HUD_** which is **_TextDisplay_** which is just an easy way to display text. It allows to display said text in multiple lines as well as it allows the user to change most of the properties of the object whenever they want.
 
 I also changed the **_Button_** so that it is easier to make buttons with text.
+
+## Version 0.0.3su.1
+Added a **_Hoverable_** class into the **_c_helper_** which allows you to easily make objects with hover detection.
+
+Added actual layering of UIs by making a new dict in **_Scene_** called **bg_uis** which stands for **background UIs**. I also added methods and edited existing to make it work.
