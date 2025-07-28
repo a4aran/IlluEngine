@@ -1,6 +1,6 @@
 # Logs
 
-## [Current Verison](#version-003su1)
+## [Current Verison](#version-01su)
 
 ## Version 0.0.1su.1
 Added ***Parallax*** and a way to make ***Custom Buttons***<br>
@@ -71,3 +71,15 @@ I also changed the **_Button_** so that it is easier to make buttons with text.
 Added a **_Hoverable_** class into the **_c_helper_** which allows you to easily make objects with hover detection.
 
 Added actual layering of UIs by making a new dict in **_Scene_** called **bg_uis** which stands for **background UIs**. I also added methods and edited existing to make it work.
+
+## Version 0.1su
+Added a new dict into **_GlobalObjects_** for custom objects.
+
+Changed the way importer works with images, so now you can call a method that will return the surface instead of methods that can only import to the local storage of importer. 
+
+Made _**change_scene**_ method of **_SceneManager_** public.
+
+Added a way for **_TextDisplay_** to have static y pos.
+
+
+**For now development stops**

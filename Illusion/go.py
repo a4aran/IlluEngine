@@ -7,6 +7,7 @@ class GlobalObjects:
         self.__uis = {}
         self.__fonts = {}
         self.font_prefix = "../assets/fonts/"
+        self.__custom_objects = {}
 
     def add_ui(self,ui: UI):
         self.__uis[ui.id] = ui
@@ -29,4 +30,12 @@ class GlobalObjects:
         if font_name in self.__fonts: return self.__fonts[font_name].render(text,size,color)
         else: raise KeyError(f"Font {font_name} not found")
 
+    def add_custom_object(self,name: str,c_object):
+        self.__custom_objects[name] = c_object
 
+    def get_custom_object(self,name:str):
+        if name in self.__custom_objects: return  self.__custom_objects[name]
+        else: raise KeyError(f"Custom Object {name} not found")
+
+    def delete_custom_object(self,name:str):
+        self.__custom_objects.pop(name)

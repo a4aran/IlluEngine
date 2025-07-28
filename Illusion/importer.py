@@ -13,6 +13,34 @@ class Importer:
         ]
 
     def import_img(self, name: str, path: str, result_size: tuple[int, int] | int):
+        self.__sprites[name] = self.return_import_img(path,result_size)
+
+    def import_animated_sprite(self, name: str, path: str, frames_amount: int,
+                               result_frame_size: tuple[int, int] | float):
+        self.__animated_sprites[name] = self.return_import_animated_sprite(path,frames_amount,result_frame_size)
+
+    def import_sound(self, name: str, path: str):
+        self.__sounds[name] = pygame.mixer.Sound(self.__prefix[2] + path)
+
+    def get_sprite(self, name: str):
+        return self.__sprites[name]
+
+    def get_animated_sprite(self, name: str):
+        return self.__animated_sprites[name]
+
+    def get_sound(self, name: str):
+        return self.__sounds[name]
+
+    def set_img_prefix(self, path_prefix: str):
+        self.__prefix[0] = path_prefix
+
+    def set_animated_sprite_prefix(self, path_prefix: str):
+        self.__prefix[1] = path_prefix
+
+    def set_sound_prefix(self, path_prefix: str):
+        self.__prefix[2] = path_prefix
+
+    def return_import_img(self, path: str, result_size: tuple[int, int] | int):
         src_img = pygame.image.load(self.__prefix[0] + path).convert_alpha()
         if isinstance(result_size, tuple):
             img = pygame.transform.scale(src_img, result_size)
@@ -22,9 +50,9 @@ class Importer:
                 src_img.get_height() * result_size
             )
             img = pygame.transform.scale(src_img, rs)
-        self.__sprites[name] = img
+        return  img
 
-    def import_animated_sprite(self, name: str, path: str, frames_amount: int,
+    def return_import_animated_sprite(self, path: str, frames_amount: int,
                                result_frame_size: tuple[int, int] | float):
         src_img = pygame.image.load(self.__prefix[1] + path).convert_alpha()
 
@@ -49,28 +77,7 @@ class Importer:
             frame.blit(img, (0, 0), (f * rfs[0], 0, *rfs))
             frames.append(frame)
 
-        self.__animated_sprites[name] = frames
-
-    def import_sound(self, name: str, path: str):
-        self.__sounds[name] = pygame.mixer.Sound(self.__prefix[2] + path)
-
-    def get_sprite(self, name: str):
-        return self.__sprites[name]
-
-    def get_animated_sprite(self, name: str):
-        return self.__animated_sprites[name]
-
-    def get_sound(self, name: str):
-        return self.__sounds[name]
-
-    def set_img_prefix(self, path_prefix: str):
-        self.__prefix[0] = path_prefix
-
-    def set_animated_sprite_prefix(self, path_prefix: str):
-        self.__prefix[1] = path_prefix
-
-    def set_sound_prefix(self, path_prefix: str):
-        self.__prefix[2] = path_prefix
+        return frames
 
 class Assets:
     def __init__(self):

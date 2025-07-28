@@ -15,13 +15,13 @@ class SceneManager:
     def update_and_draw(self,frame_data: FrameData,surface: pygame.Surface):
         self.__get_data_from_scene()
         if self.__sc_data["should_change_scene"]:
-            self.__change_scene(self.__sc_data["scene_to_change_to"])
+            self.change_scene(self.__sc_data["scene_to_change_to"])
         self.__scenes[self.__active_scene].update_and_draw(frame_data,surface)
 
     def __get_data_from_scene(self):
         self.__sc_data = self.__scenes[self.__active_scene].data
 
-    def __change_scene(self,scene_id: int):
+    def change_scene(self, scene_id: int):
         self.__scenes[self.__active_scene].on_changed_from()
         self.__previous_scene = self.__active_scene
         self.__active_scene = scene_id

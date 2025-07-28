@@ -95,6 +95,8 @@ class UI:
                 self.__size = None
                 self.__color = (0, 0, 0)
                 self.__should_reload = True
+                self.__use_constant_y_pos = False
+                self.__constant_y = 0
 
             def reload(self):
                 if self.__text is not None and self.__size is not None and self.__color is not None:
@@ -158,7 +160,16 @@ class UI:
 
             def draw(self,surface: pygame.Surface):
                 if self.__should_reload: self.reload()
-                surface.blit(self.__surface,self.__top_left_pos)
+                r_pos = self.__top_left_pos
+                if self.__use_constant_y_pos:
+                    r_pos = (self.__top_left_pos[0],self.__constant_y)
+                surface.blit(self.__surface,r_pos)
+
+            def toggle_constant_y_pos(self):
+                self.__use_constant_y_pos = True
+
+            def set_constant_y_pos(self,y:float):
+                self.__constant_y = y
 
         class Animation:
             def __init__(self,name: str,center_pos: tuple[float,float],sprites: list,fps:int,play_amount:int = 0):
