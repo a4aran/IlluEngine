@@ -1,10 +1,11 @@
 import pygame.image
 
 class Importer:
-    def __init__(self):
+    def __init__(self,hws: bool):
         self.__sprites = {}
         self.__animated_sprites = {}
         self.__sounds = {}
+        self.__hws = hws
 
         self.__prefix = [
             '',  # image prefix
@@ -20,7 +21,8 @@ class Importer:
         self.__animated_sprites[name] = self.return_import_animated_sprite(path,frames_amount,result_frame_size)
 
     def import_sound(self, name: str, path: str):
-        self.__sounds[name] = pygame.mixer.Sound(self.__prefix[2] + path)
+        if self.__hws:
+            self.__sounds[name] = pygame.mixer.Sound(self.__prefix[2] + path)
 
     def get_sprite(self, name: str):
         return self.__sprites[name]
@@ -29,7 +31,12 @@ class Importer:
         return self.__animated_sprites[name]
 
     def get_sound(self, name: str):
-        return self.__sounds[name]
+        if self.__hws:
+            return self.__sounds[name]
+
+    def play_sound(self,name):
+        if self.__hws:
+            self.__sounds[name].play()
 
     def set_img_prefix(self, path_prefix: str):
         self.__prefix[0] = path_prefix
@@ -103,20 +110,24 @@ class Assets:
         return self.__animated_sprites[name]
 
 class MusicManager:
-    def __init__(self):
+    def __init__(self,hws):
         self._tracks = {}
         self._current_track = None
         self._prefix = ""
         self._volume = 100
         self._mute = False
+        self.__hws = hws
 
     def add_track(self,name: str, path: str):
+        if not self.__hws: return
         self._tracks[name] = self._prefix + path
 
     def remove_track(self,name: str):
+        if not self.__hws: return
         self._tracks.pop(name)
 
     def play_track(self,name:str):
+        if not self.__hws: return
         if not name in self._tracks:
             print("Couldn't find track")
             return
@@ -127,41 +138,49 @@ class MusicManager:
         self.resync_volume()
 
     def set_path_prefix(self,prefix: str):
+        if not self.__hws: return
         self._prefix = prefix
 
     def unload_all(self):
+        if not self.__hws: return
         pygame.mixer.music.unload()
         self._current_track = None
 
-    @staticmethod
-    def pause():
+    def pause(self):
+        if not self.__hws: return
         pygame.mixer.music.pause()
 
-    @staticmethod
-    def unpause():
+    def unpause(self):
+        if not self.__hws: return
         pygame.mixer.music.unpause()
 
     def set_volume(self,amount: int):
+        if not self.__hws: return
         self._volume = max(min(amount,100),0)
         self.resync_volume()
 
     def change_volume_by(self,amount: int): # if you wanna decrease the volume enter negative number
+        if not self.__hws: return
         self._volume += amount
         self._volume = max(min(self._volume, 100), 0)
         self.resync_volume()
 
     def get_volume_value(self):
+        if not self.__hws: return
         return self._volume
 
     def toggle_mute(self):
+        if not self.__hws: return
         self._mute = not self._mute
         self.resync_volume()
 
     def resync_volume(self):
+        if not self.__hws: return
         if self._mute:
             pygame.mixer.music.set_volume(0)
         else:
             pygame.mixer.music.set_volume(self._volume / 100)
 
     def get_current_track(self):
+        if not self.__hws: return
         return self._current_track

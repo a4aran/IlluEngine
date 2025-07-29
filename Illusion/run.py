@@ -1,14 +1,19 @@
 import pygame
 
 pygame.init()
-pygame.mixer.init()
+hws = True
+try:
+    pygame.mixer.init()
+except:
+    hws = False
+    print("No audio hardware found.")
 import window_size
 from game import Game
 
 from frame_data_f import FrameData as Fd
 
 window = pygame.display.set_mode((window_size.width,window_size.height))
-game_o = Game()
+game_o = Game(hws)
 
 clock = pygame.time.Clock()
 game_on = True

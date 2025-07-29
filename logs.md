@@ -1,6 +1,6 @@
 # Logs
 
-## [Current Verison](#version-01su)
+## [Current Verison](#version-01su01)
 
 ## Version 0.0.1su.1
 Added ***Parallax*** and a way to make ***Custom Buttons***<br>
@@ -81,5 +81,8 @@ Made _**change_scene**_ method of **_SceneManager_** public.
 
 Added a way for **_TextDisplay_** to have static y pos.
 
+
+## Version 0.1su.0.1
+I added a check for initializing the **_mixer_** so that the game works on devices without audio hardware.
 
 **For now development stops**

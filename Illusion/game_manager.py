@@ -11,11 +11,11 @@ from scene_manager import SceneManager
 
 
 class GameManagerPreset:
-    def __init__(self):
+    def __init__(self,hardware_sound: bool):
         self._scene_manager = SceneManager()
-        self._importer = Importer()
+        self._importer = Importer(hardware_sound)
         self._assets = Assets()
-        self._music_manager = MusicManager()
+        self._music_manager = MusicManager(hardware_sound)
         self._global_objects = go.GlobalObjects()
 
         self._importer.set_img_prefix("../assets/textures/static/")
@@ -27,8 +27,8 @@ class GameManagerPreset:
         self._scene_manager.update_and_draw(frame_data,surface)
 
 class IllusionBuiltInsPreset(GameManagerPreset):
-    def __init__(self):
-        super().__init__()
+    def __init__(self,hardware_sound: bool):
+        super().__init__(hardware_sound)
 
         self._importer.set_animated_sprite_prefix("built-in-assets/")
         self._importer.set_sound_prefix("built-in-assets/")
@@ -53,7 +53,7 @@ class IllusionBuiltInsPreset(GameManagerPreset):
             super().__init__(importer, assets,music_manager,gos)
             temp_ui = self.get_ui("default")
             temp_ui.new_animation("logo",importer.get_animated_sprite("b_logo"),(window_size.width / 2, window_size.height / 2),10,1)
-            importer.get_sound("b_logo_sound").play()
+            importer.play_sound("b_logo_sound")
             self.anim_cooldown = 0
             self.fill_color = (0,80,90)
 
