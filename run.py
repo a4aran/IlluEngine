@@ -1,5 +1,8 @@
 import pygame
 
+import app_data
+import engine_settings
+
 pygame.init()
 hws = True
 try:
@@ -10,7 +13,18 @@ except:
 import window_size
 from game import Game
 
-from frame_data_f import FrameData as Fd
+from Illusion.frame_data_f import FrameData as Fd
+
+temp = app_data.window_title
+if app_data.window_title is None:
+    temp = "Illu Engine Window"
+pygame.display.set_caption(temp)
+
+if app_data.icon_img_path is not None:
+    try:
+        icon = pygame.image.load(app_data.icon_img_path)
+    except:
+        icon = pygame.image.load("." + app_data.icon_img_path)
 
 window = pygame.display.set_mode((window_size.width,window_size.height))
 game_o = Game(hws)
@@ -19,9 +33,14 @@ clock = pygame.time.Clock()
 game_on = True
 frame_data = Fd()
 while game_on:
-    frame_data.dt = clock.tick(240) / 1000
+    frame_data.dt = clock.tick(engine_settings.desired_fps) / 1000
+    frame_data.dt = min(frame_data.dt,engine_settings.max_delta_time)
     frame_data.reset_mbtn()
     frame_data.hovers = False
+    frame_data.keys = pygame.key.get_pressed()
+
+    if engine_settings.show_debug_info:
+        if engine_settings.print_fps: print(clock.get_fps())
 
     for e in pygame.event.get():
         if e.type == pygame.QUIT:

@@ -2,7 +2,7 @@ import pygame
 
 from Illusion import ui
 from Illusion.frame_data_f import FrameData
-from go import GlobalObjects
+from Illusion.go import GlobalObjects
 from Illusion.importer import Importer, Assets, MusicManager
 
 
@@ -22,17 +22,25 @@ class Scene:
         for o in self._objs:
             o.update(frame_data)
         for ui in self._uis:
-            self.get_ui(ui).update(frame_data)
+            temp = self.get_ui(ui)
+            if temp.should_show:
+                temp.update(frame_data)
         for bg_ui in self._bg_uis:
-            self.get_ui(bg_ui).update(frame_data)
+            temp = self.get_ui(bg_ui)
+            if temp.should_show:
+                temp.update(frame_data)
 
     def __draw(self,surface: pygame.Surface):
         for bg in self._bg_uis:
-            self.get_ui(bg).draw(surface)
+            temp = self.get_ui(bg)
+            if temp.should_show:
+                temp.draw(surface)
         for o in self._objs:
             o.draw(surface)
         for ui in self._uis:
-            self.get_ui(ui).draw(surface)
+            temp = self.get_ui(ui)
+            if temp.should_show:
+                temp.draw(surface)
 
     def update_and_draw(self,frame_data: FrameData,surface: pygame.Surface):
         surface.fill(self.fill_color)
@@ -55,15 +63,19 @@ class Scene:
 
     def get_data_from_uis(self):
         for ui in self._uis:
-            if self.get_ui(ui).data()["should_change_scene"]:
-                self.edit_change_scene_data(self.get_ui(ui).data()["should_change_scene"],self.get_ui(ui).data()["scene_to_change_to"])
-                self.get_ui(ui).reset_data()
-                return
+            temp = self.get_ui(ui)
+            if temp.should_show:
+                if temp.data()["should_change_scene"]:
+                    self.edit_change_scene_data(temp.data()["should_change_scene"],temp.data()["scene_to_change_to"])
+                    temp.reset_data()
+                    return
         for bg_ui in self._bg_uis:
-            if self.get_ui(bg_ui).data()["should_change_scene"]:
-                self.edit_change_scene_data(self.get_ui(bg_ui).data()["should_change_scene"],self.get_ui(ui).data()["scene_to_change_to"])
-                self.get_ui(bg_ui).reset_data()
-                return
+            temp = self.get_ui(bg_ui)
+            if temp.should_show:
+                if temp.data()["should_change_scene"]:
+                    self.edit_change_scene_data(temp.data()["should_change_scene"],temp.data()["scene_to_change_to"])
+                    temp.reset_data()
+                    return
 
     def create_ui(self,ui_name):
         self._uis[ui_name] = ui.UI(ui_name)

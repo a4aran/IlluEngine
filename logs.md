@@ -86,3 +86,10 @@ Added a way for **_TextDisplay_** to have static y pos.
 I added a check for initializing the **_mixer_** so that the game works on devices without audio hardware.
 
 **For now development stops**
+
+## Version 0.1su.1
+Made it possible to easily export the project as _.exe_ file using `pyinstaller run.py --add-data="assets:assets"`. After running that in _cmd_ you'll need to take the _assets_ folder out of the *_internal* folder  and into the folder with _.exe_ file.
+
+Added easy customizability to the project using files like *app_data* and *engine_settings*.
+
+Made **UIs** hidable.

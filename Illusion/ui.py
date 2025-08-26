@@ -3,14 +3,15 @@ from enum import Enum
 
 from pygame import SRCALPHA
 
-from frame_data_f import FrameData
-from text_renderer import TextRenderer
+from Illusion.frame_data_f import FrameData
+from Illusion.text_renderer import TextRenderer
 
 class UI:
     def __init__(self,id):
         self.id = id
         self._hud = self._HUD()
         self._gui = self._GUI()
+        self.should_show = True
 
     class _HUD:
         def __init__(self):

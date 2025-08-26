@@ -5,9 +5,9 @@ from Illusion import go
 from Illusion.go import GlobalObjects
 from Illusion.importer import MusicManager
 from Illusion.scene import Scene
-from frame_data_f import FrameData
-from importer import Importer, Assets
-from scene_manager import SceneManager
+from Illusion.frame_data_f import FrameData
+from Illusion.importer import Importer, Assets
+from Illusion.scene_manager import SceneManager
 
 
 class GameManagerPreset:
@@ -18,10 +18,10 @@ class GameManagerPreset:
         self._music_manager = MusicManager(hardware_sound)
         self._global_objects = go.GlobalObjects()
 
-        self._importer.set_img_prefix("../assets/textures/static/")
-        self._importer.set_animated_sprite_prefix("../assets/textures/animated/")
-        self._importer.set_sound_prefix("../assets/sounds/effects/")
-        self._music_manager.set_path_prefix("../assets/sounds/music/")
+        self._importer.set_img_prefix("./assets/textures/static/")
+        self._importer.set_animated_sprite_prefix("./assets/textures/animated/")
+        self._importer.set_sound_prefix("./assets/sounds/effects/")
+        self._music_manager.set_path_prefix("./assets/sounds/music/")
 
     def update_and_draw(self,frame_data: FrameData,surface: pygame.Surface):
         self._scene_manager.update_and_draw(frame_data,surface)
@@ -30,8 +30,8 @@ class IllusionBuiltInsPreset(GameManagerPreset):
     def __init__(self,hardware_sound: bool):
         super().__init__(hardware_sound)
 
-        self._importer.set_animated_sprite_prefix("built-in-assets/")
-        self._importer.set_sound_prefix("built-in-assets/")
+        self._importer.set_animated_sprite_prefix("./assets/built-in-assets/")
+        self._importer.set_sound_prefix("./assets/built-in-assets/")
 
         self._importer.import_animated_sprite("b_logo","logo.png",13,(64,192))
 
@@ -42,10 +42,10 @@ class IllusionBuiltInsPreset(GameManagerPreset):
 
         self._scene_manager.add_scene(self.__LoadSc(self._importer,self._assets,self._music_manager,self._global_objects))
 
-        self._importer.set_img_prefix("../assets/textures/static/")
-        self._importer.set_animated_sprite_prefix("../assets/textures/animated/")
-        self._importer.set_sound_prefix("../assets/sounds/effects/")
-        self._music_manager.set_path_prefix("../assets/sounds/music/")
+        self._importer.set_img_prefix("./assets/textures/static/")
+        self._importer.set_animated_sprite_prefix("./assets/textures/animated/")
+        self._importer.set_sound_prefix("./assets/sounds/effects/")
+        self._music_manager.set_path_prefix("./assets/sounds/music/")
 
 
     class __LoadSc(Scene):

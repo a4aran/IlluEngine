@@ -22,7 +22,10 @@ class Importer:
 
     def import_sound(self, name: str, path: str):
         if self.__hws:
-            self.__sounds[name] = pygame.mixer.Sound(self.__prefix[2] + path)
+            try:
+                self.__sounds[name] = pygame.mixer.Sound(self.__prefix[2] + path)
+            except:
+                self.__sounds[name] = pygame.mixer.Sound("." + self.__prefix[2] + path)
 
     def get_sprite(self, name: str):
         return self.__sprites[name]
@@ -48,7 +51,11 @@ class Importer:
         self.__prefix[2] = path_prefix
 
     def return_import_img(self, path: str, result_size: tuple[int, int] | int):
-        src_img = pygame.image.load(self.__prefix[0] + path).convert_alpha()
+        try:
+            src_img = pygame.image.load(self.__prefix[0] + path).convert_alpha()
+        except:
+            src_img = pygame.image.load("." + self.__prefix[0] + path).convert_alpha()
+
         if isinstance(result_size, tuple):
             img = pygame.transform.scale(src_img, result_size)
         else:
@@ -61,7 +68,10 @@ class Importer:
 
     def return_import_animated_sprite(self, path: str, frames_amount: int,
                                result_frame_size: tuple[int, int] | float):
-        src_img = pygame.image.load(self.__prefix[1] + path).convert_alpha()
+        try:
+            src_img = pygame.image.load(self.__prefix[1] + path).convert_alpha()
+        except:
+            src_img = pygame.image.load("." + self.__prefix[1] + path).convert_alpha()
 
         if isinstance(result_frame_size, tuple):
             rfs = result_frame_size
@@ -132,7 +142,11 @@ class MusicManager:
             print("Couldn't find track")
             return
         pygame.mixer.music.unload()
-        pygame.mixer.music.load(self._tracks[name])
+        try:
+            pygame.mixer.music.load(self._tracks[name])
+        except:
+            pygame.mixer.music.load("." + self._tracks[name])
+
         self._current_track = name
         pygame.mixer.music.play(-1)
         self.resync_volume()
