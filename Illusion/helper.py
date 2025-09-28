@@ -64,4 +64,7 @@ class Helper:
         def get_time_left(self):
             return max(0, self._full_time - self._countdown)
 
+def to_format_string(color: tuple[int,int,int],size: int, font_name: str, text: str):
+    return f"{{s:{size};c:{color};f:{font_name};}}{text}"
+
 c_helper = Helper()

@@ -231,6 +231,7 @@ class UI:
                                 cur_color = f"{cur_color}{letter}"
                             if setting_font and letter not in font_exceptions:
                                 cur_font = f"{cur_font}{letter}"
+
                             if letter == "s":
                                 setting_size = True
                                 cur_size = ""
@@ -240,33 +241,49 @@ class UI:
                             if letter == "f":
                                 setting_font = True
                                 cur_font = ""
+
                             if letter == ";":
                                 setting_color = False
                                 setting_size = False
                                 setting_font = False
+
                             if letter == "}":
                                 reading_formatting = False
                                 reading_text = True
                         if letter == "{":
-                            setting_size = False
                             reading_formatting = True
                             reading_text = False
-                            if cur_size == "" or cur_size is None: cur_size = 24
-                            if cur_color == "" or cur_color is None: cur_color = "(0,0,0)"
-                            if cur_font == "" or cur_font is None: cur_font = next(iter(self.__fonts.keys()))
-                            cur_color = ast.literal_eval(cur_color)
-                            print(text)
-                            print(cur_size)
-                            print(cur_color)
-                            print(cur_font)
-                            temp.append(self.__gen_for_surf(text,self.__fonts[cur_font],cur_size,cur_color))
-                            cur_size = None
-                            cur_color = None
-                            cur_font = None
+                            # don’t reset here!
+                            text_to_render = text
                             text = ""
+                            if text_to_render:
+                                # flush previous text chunk before formatting
+                                if cur_size is None: cur_size = 24
+                                if cur_color is None: cur_color = (0, 0, 0)
+                                if cur_font is None: cur_font = next(iter(self.__fonts.keys()))
+                                temp.append(
+                                    self.__gen_for_surf(text_to_render, self.__fonts[cur_font], cur_size, cur_color))
                         if not reading_formatting and reading_text:
                             if letter != "}":
                                 text += letter
+                        if letter == "}":
+                            reading_formatting = False
+                            reading_text = True
+                            if cur_size in ("", None): cur_size = 24
+                            if cur_color in ("", None): cur_color = (0, 0, 0)
+                            if isinstance(cur_color, str): cur_color = ast.literal_eval(cur_color)
+                            if cur_font in ("", None): cur_font = next(iter(self.__fonts.keys()))
+
+                    # only append the finished line here, not inside the inner loop
+                    if text:
+                        # flush any leftover text into a surface
+                        if cur_size == "" or cur_size is None: cur_size = 24
+                        if cur_color == "" or cur_color is None: cur_color = "(0,0,0)"
+                        if cur_font == "" or cur_font is None: cur_font = next(iter(self.__fonts.keys()))
+                        if not isinstance(cur_color,tuple): cur_color = ast.literal_eval(cur_color)
+                        temp.append(self.__gen_for_surf(text, self.__fonts[cur_font], cur_size, cur_color))
+                        text = ""
+
                     temp_surf_list.append(temp)
                 total_width = 0
                 part_width = []
