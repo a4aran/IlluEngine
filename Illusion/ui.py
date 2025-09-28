@@ -1,3 +1,6 @@
+import ast
+from collections.abc import Sequence
+
 import pygame
 from enum import Enum
 
@@ -78,12 +81,22 @@ class UI:
                 surface.blit(self.gen_frame(), self.parallax_pos)
 
         class Img:
-            def __init__(self,center_pos: tuple[float,float],img: pygame.Surface):
+            def __init__(self,name: str,center_pos: tuple[float,float],img: pygame.Surface):
+                self.name = name
                 self.img = img.copy()
                 self.pos = (center_pos[0] -self.img.get_width()/2,center_pos[1] -self.img.get_height()/2)
+                self.no_calc_pos = center_pos
 
             def draw(self,surface: pygame.Surface):
                 surface.blit(self.img,self.pos)
+
+            def change_img(self,img: pygame.Surface):
+                self.img = img
+                self.pos = (self.no_calc_pos[0] -self.img.get_width()/2,self.no_calc_pos[1] -self.img.get_height()/2)
+
+            def change_pos(self,center_pos: tuple[float,float]):
+                self.no_calc_pos = center_pos
+                self.pos = (self.no_calc_pos[0] -self.img.get_width()/2,self.no_calc_pos[1] -self.img.get_height()/2)
 
         class TextDisplay:
             def __init__(self,name: str,font: TextRenderer,center_pos: tuple[float,float]):
@@ -172,6 +185,151 @@ class UI:
             def set_constant_y_pos(self,y:float):
                 self.__constant_y = y
 
+        class FormattedTextDisplay:
+            def __init__(self,name: str,fonts: dict,center_pos: tuple[float,float]):
+                self.name = name
+                self.__center_pos = center_pos
+                self.__top_left_pos = None
+                self.__fonts = fonts
+                self.__unformatted_text = []
+                self.__formatted_text = []
+                self.__surface = None
+                self.__should_reload = True
+                self.__use_constant_y_pos = False
+                self.__constant_y = 0
+
+            def set_text(self,text: Sequence[str]):
+                self.__unformatted_text = text
+                self.__should_reload = True
+
+            def __format(self):
+                temp_surf_list = []
+
+                nums = "1234567890"
+                color_chars = f"{nums},()"
+                font_exceptions = ";{}:"
+
+                reading_formatting = False
+                reading_text = False
+
+                text = ""
+
+                setting_size = False
+                setting_color = False
+                setting_font = False
+
+                cur_size = None
+                cur_color = None
+                cur_font = None
+                for line in self.__unformatted_text:
+                    temp = []
+                    for letter in line:
+                        if reading_formatting:
+                            if setting_size and letter in nums:
+                                cur_size = int(f"{cur_size}{letter}")
+                            if setting_color and letter in color_chars:
+                                cur_color = f"{cur_color}{letter}"
+                            if setting_font and letter not in font_exceptions:
+                                cur_font = f"{cur_font}{letter}"
+                            if letter == "s":
+                                setting_size = True
+                                cur_size = ""
+                            if letter == "c":
+                                setting_color = True
+                                cur_color = ""
+                            if letter == "f":
+                                setting_font = True
+                                cur_font = ""
+                            if letter == ";":
+                                setting_color = False
+                                setting_size = False
+                                setting_font = False
+                            if letter == "}":
+                                reading_formatting = False
+                                reading_text = True
+                        if letter == "{":
+                            setting_size = False
+                            reading_formatting = True
+                            reading_text = False
+                            if cur_size == "" or cur_size is None: cur_size = 24
+                            if cur_color == "" or cur_color is None: cur_color = "(0,0,0)"
+                            if cur_font == "" or cur_font is None: cur_font = next(iter(self.__fonts.keys()))
+                            cur_color = ast.literal_eval(cur_color)
+                            print(text)
+                            print(cur_size)
+                            print(cur_color)
+                            print(cur_font)
+                            temp.append(self.__gen_for_surf(text,self.__fonts[cur_font],cur_size,cur_color))
+                            cur_size = None
+                            cur_color = None
+                            cur_font = None
+                            text = ""
+                        if not reading_formatting and reading_text:
+                            if letter != "}":
+                                text += letter
+                    temp_surf_list.append(temp)
+                total_width = 0
+                part_width = []
+                total_line_width = []
+                for surf_list in temp_surf_list:
+                    temp = []
+                    total = 0
+                    for surf in surf_list:
+                        temp.append(surf.get_width())
+                        total += surf.get_width()
+                    total_line_width.append(total)
+                    total_width = max(total_width,total)
+                line_height_list = []
+                total_height = 0
+                for surf_list in temp_surf_list:
+                    max_height = 0
+                    for surf in surf_list:
+                        max_height = max(max_height,surf.get_height())
+                    total_height += max_height
+                    line_height_list.append(max_height)
+                line_surfaces = []
+                for num, line in enumerate(temp_surf_list):
+                    temp = pygame.Surface((total_width,line_height_list[num]),pygame.SRCALPHA)
+                    calc_x = total_width/2 - total_line_width[num]/2
+                    for surf in temp_surf_list[num]:
+                        temp.blit(surf,(calc_x,0))
+                        calc_x += surf.get_width()
+                    line_surfaces.append(temp)
+
+                final_surf = pygame.Surface((total_width,total_height),pygame.SRCALPHA)
+                blit_height = 0
+                for surf in line_surfaces:
+                    final_surf.blit(surf,(0,blit_height))
+                    blit_height += surf.get_height()
+
+                self.__surface = final_surf
+
+            @staticmethod
+            def __gen_for_surf(text:str,font: TextRenderer,size:int,color: tuple[int,int,int]):
+                return font.render(text,size,color,True)
+
+            def reload(self):
+                self.__format()
+                if not self.__unformatted_text: self.__surface = pygame.Surface((1,1),pygame.SRCALPHA)
+                self.__top_left_pos = (self.__center_pos[0] - self.__surface.get_width()/2,
+                                     self.__center_pos[1] - self.__surface.get_height()/2,)
+
+            def draw(self,surface: pygame.Surface):
+                if self.__should_reload: self.reload()
+                r_pos = self.__top_left_pos
+                if self.__use_constant_y_pos:
+                    r_pos = (self.__top_left_pos[0],self.__constant_y)
+                surface.blit(self.__surface,r_pos)
+
+            def set_pos(self,center_pos: tuple[float,float]):
+                self.__center_pos =center_pos
+
+            def toggle_constant_y_pos(self):
+                self.__use_constant_y_pos = True
+
+            def set_constant_y_pos(self,y:float):
+                self.__constant_y = y
+
         class Animation:
             def __init__(self,name: str,center_pos: tuple[float,float],sprites: list,fps:int,play_amount:int = 0):
                 self.name = name
@@ -236,9 +394,32 @@ class UI:
                     if a.name == name:
                         i = index
             if i is None:
-                print("'"+name+"' animation not found")
+                print("'"+name+"' text display not found")
                 return
             return self.surface_s[i]
+
+        def find_img(self,name:str): #add
+            i = None
+            for index, a in enumerate(self.surface_s):
+                if isinstance(a, self.Img):
+                    if a.name == name:
+                        i = index
+            if i is None:
+                print("'"+name+"' image not found")
+                return
+            return self.surface_s[i]
+
+        def find_formatted_text_display(self,name:str):
+            i = None
+            for index, a in enumerate(self.surface_s):
+                if isinstance(a, self.FormattedTextDisplay):
+                    if a.name == name:
+                        i = index
+            if i is None:
+                print("'"+name+"' formatted text display not found")
+                return
+            return self.surface_s[i]
+
 
     class _GUI:
         def __init__(self):
@@ -386,9 +567,10 @@ class UI:
         if button_state == 1: temp.modify_hover_text(text_renderer,text,size,color)
         if button_state == 2: temp.modify_pressed_text(text_renderer,text,size,color)
 
-    def new_img(self,img: pygame.Surface,center_pos: pygame.Vector2):
+    def new_img(self,name:str,img: pygame.Surface,center_pos: pygame.Vector2):
         self._hud.surface_s.append(
             self._hud.Img(
+                name,
                 center_pos, img
             )
         )
@@ -420,11 +602,26 @@ class UI:
             )
         )
 
+    def new_formatted_text_display(self, name: str,fonts: dict[TextRenderer], center_pos: tuple[float,float]):
+        self._hud.surface_s.append(
+            self._hud.FormattedTextDisplay(
+                name,
+                fonts,
+                center_pos
+            )
+        )
+
     def get_text_display(self,name: str) -> _HUD.TextDisplay:
         return  self._hud.find_text_display(name)
 
+    def get_formatted_text_display(self,name: str) -> _HUD.FormattedTextDisplay:
+        return  self._hud.find_formatted_text_display(name)
+
     def get_animation(self,name:str):
         return  self._hud.find_animation(name)
+
+    def get_img(self,name:str) -> _HUD.Img: #add
+        return self._hud.find_img(name)
 
     def update(self,frame_data: FrameData):
         self._hud.update(frame_data)

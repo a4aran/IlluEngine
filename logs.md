@@ -1,6 +1,6 @@
 # Logs
 
-## [Current Verison](#version-01su01)
+## [Current Verison](#version-01su2)
 
 ## Version 0.0.1su.1
 Added ***Parallax*** and a way to make ***Custom Buttons***<br>
@@ -93,3 +93,20 @@ Made it possible to easily export the project as _.exe_ file using `pyinstaller 
 Added easy customizability to the project using files like *app_data* and *engine_settings*.
 
 Made **UIs** hidable.
+
+## Version 0.1su.2
+Added a way to make custom cursors by inputting a path to the file in to the **app_data**
+
+Added **Timer** class to **c_helper**, which works like a timer
+
+Added **Formatted Text Display** to **UI**. Accepts a list of strings as text those strings can be (but don't need to be, if so they will have default values) formatted by putting `{}` before the text. The object also needs you to give it a dict of **TextRenderer**s, explanation why is in formatting guide.
+
+Formatting guide:
+ - `s:[int]` used for setting the size of the following text like: `{s:40}` will give text of size 40
+ - `c:([0-255],[0-255],[0-255])` used for setting the color of the following text like: `c:(255,0,0)` will give text of color `rgb(255,0,0)` (red)
+ - `f:[str]` used for selecting the font of following text, you'll have to  replace the str with the key of the font inside the dict you passed while creating the object
+
+Default values:
+- Size: 24
+- Color: (0,0,0)
+- Font: first font in the dict
