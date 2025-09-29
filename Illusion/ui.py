@@ -172,6 +172,9 @@ class UI:
                 self.__text = text
                 self.__should_reload = True
 
+            def get_text(self):
+                return self.__text
+
             def draw(self,surface: pygame.Surface):
                 if self.__should_reload: self.reload()
                 r_pos = self.__top_left_pos
@@ -192,7 +195,6 @@ class UI:
                 self.__top_left_pos = None
                 self.__fonts = fonts
                 self.__unformatted_text = []
-                self.__formatted_text = []
                 self.__surface = None
                 self.__should_reload = True
                 self.__use_constant_y_pos = False
@@ -201,6 +203,9 @@ class UI:
             def set_text(self,text: Sequence[str]):
                 self.__unformatted_text = text
                 self.__should_reload = True
+
+            def get_text(self):
+                return self.__unformatted_text
 
             def __format(self):
                 temp_surf_list = []
