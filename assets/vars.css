@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap');
+
+.noto-sans-jp {
+  font-family: "Noto Sans JP", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+.move-in{
+    animation: move-in 1s ease-out;
+}
+@keyframes move-in {
+    0%{
+        transform: translateY(-5%);
+        opacity: 0.25;
+    }
+    100%{
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
