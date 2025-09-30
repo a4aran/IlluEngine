@@ -23,21 +23,20 @@
 
     #left {
       width: 70%;
-      padding: 20px;
-      position: absolute;
+      height: 100vh;
+      display: flex;
+      justify-content: center; /* Horizontal center */
+      align-items: center;     /* Vertical center */
     }
 
-    #left h1{
-        top: 50%;
-        left: 50%;
-        translate: -50% -50%;
-        text-align: center;
+    #left h1 {
+      text-align: center;
     }
     
     #right {
       width: 30%;
       border-left: 2px solid black;
-      height: 100vh; /* Full viewport height */
+      height: 100vh;
     }
 
     iframe {
