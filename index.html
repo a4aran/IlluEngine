@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>IlluEngine - Dokumentacja</title>
+  <title>IlluEngine - Documentation</title>
   <link rel="stylesheet" href="./assets/vars.css">
   <style>
     * {
@@ -162,9 +162,12 @@
 <body>
   <!-- Główna treść -->
   <div id="left">
-    <h1>IlluEngine Dokumentacja</h1>
+    <h1>Illu Engine Documentation</h1>
     <div id="content">
-      <p>Wybierz stronę z menu po prawej stronie.</p>
+      <p>Welcome to Illu Engine Documentation</p>
+      <p>Here you'll be able to find everything you'll need for developing with Illu</p>
+      <p>On right side you'll see a sidebar with entries, click on the one you're interested in and read!</p>
+      <p style="color:#555555;">Note: some elements in sidebar have buttons that hide sub-classes of the element. Click on those buttons to access them</p>
     </div>
   </div>
 
@@ -178,6 +181,21 @@
       </li>
       <li>
         <div class="row">
+          <a href="pages/download-and-installation.md" class="nav-link">Download and Installation</a>
+        </div>
+      </li>
+      <li>
+        <div class="row">
+          <a href="pages/getting-started.md" class="nav-link">Getting Started</a>
+        </div>
+      </li>
+      <li>
+        <div class="row">
+          <a href="pages/version-format.md" class="nav-link">Version Formay</a>
+        </div>
+      </li>
+      <li>
+        <div class="row">
           <a href="pages/ui.md" class="nav-link">UI</a>
           <button class="toggle"></button>
         </div>
@@ -185,12 +203,15 @@
           <li>
             <div class="row">
               <a href="pages/gui.md" class="nav-link">GUI</a>
+              <button class="toggle"></button>
             </div>
-          </li>
-          <li>
-            <div class="row">
-              <a href="pages/hud.md" class="nav-link">HUD</a>
-            </div>
+            <ul>
+              <li>
+                <div class="row">
+                  <a href="pages/gui-elements/button.md">Button</a>
+                </div>
+              </li>
+            </ul>
           </li>
         </ul>
       </li>
