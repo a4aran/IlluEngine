@@ -218,11 +218,12 @@ const content = document.getElementById("content");
 
 // Add IDs to headings safely
 const renderer = new marked.Renderer();
-renderer.heading = function (text, level, raw) {
-  const safeText = (raw || text || "").toString();
-  const id = safeText.toLowerCase().replace(/[^\w]+/g, '-');
+renderer.heading = function (text, level, raw, slugger) {
+  // slugger generates unique safe ids
+  const id = slugger.slug(text);
   return `<h${level} id="${id}">${text}</h${level}>`;
 };
+
 
 // Function to load Markdown
 function loadMarkdown(url) {
