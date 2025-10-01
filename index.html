@@ -216,14 +216,15 @@
 const sidebar = document.getElementById("right");
 const content = document.getElementById("content");
 
-// Add IDs to headings safely
+// Create a Slugger instance for unique header IDs
+const slugger = new marked.Slugger();
+
+// Renderer that assigns IDs to headers
 const renderer = new marked.Renderer();
-renderer.heading = function (text, level, raw, slugger) {
-  // slugger generates unique safe ids
-  const id = slugger.slug(text);
+renderer.heading = function (text, level) {
+  const id = slugger.slug(text); // generate safe id
   return `<h${level} id="${id}">${text}</h${level}>`;
 };
-
 
 // Function to load Markdown
 function loadMarkdown(url) {
@@ -231,11 +232,12 @@ function loadMarkdown(url) {
     .then(res => res.text())
     .then(md => {
       content.innerHTML = marked.parse(md, { renderer });
-      // Fix links inside markdown
+
+      // Fix links inside markdown to load via ?load=
       content.querySelectorAll("a").forEach(a => {
         const href = a.getAttribute("href");
         if (href && href.endsWith(".md")) {
-          a.addEventListener("click", (e) => {
+          a.addEventListener("click", e => {
             e.preventDefault();
             loadMarkdown("pages/" + href);
             history.pushState(null, "", "?load=" + href); // update URL
@@ -249,8 +251,8 @@ function loadMarkdown(url) {
     });
 }
 
-// Sidebar event delegation
-sidebar.addEventListener("click", (e) => {
+// Sidebar click delegation
+sidebar.addEventListener("click", e => {
   // Toggle open/close
   if (e.target.classList.contains("toggle")) {
     e.stopPropagation();
@@ -258,27 +260,25 @@ sidebar.addEventListener("click", (e) => {
     li.classList.toggle("open");
   }
 
-  // Handle GET-based links
+  // GET-based link handling
   if (e.target.tagName === "A") {
     e.preventDefault();
     const href = new URL(e.target.href).searchParams.get("load");
     if (href) {
       loadMarkdown("pages/" + href);
-      history.pushState(null, "", "?load=" + href); // update URL
+      history.pushState(null, "", "?load=" + href);
     }
   }
 });
 
-// Auto-load markdown on page load
+// Auto-load Markdown from query parameter
 window.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
   const load = params.get("load");
-  if (load) {
-    loadMarkdown("pages/" + load);
-  }
+  if (load) loadMarkdown("pages/" + load);
 });
 
-// Handle browser back/forward
+// Handle browser back/forward buttons
 window.addEventListener("popstate", () => {
   const params = new URLSearchParams(window.location.search);
   const load = params.get("load");
