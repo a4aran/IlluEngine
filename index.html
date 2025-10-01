@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -213,34 +213,65 @@
   <!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
-  const sidebar = document.getElementById("right");
-  const content = document.getElementById("content");
+const sidebar = document.getElementById("right");
+const content = document.getElementById("content");
 
-  // Event delegation for toggle buttons
-  sidebar.addEventListener("click", (e) => {
-    if (e.target.classList.contains("toggle")) {
-      e.stopPropagation();
-      const li = e.target.closest("li");
-      li.classList.toggle("open");
-    }
+// Add IDs to headings
+const renderer = new marked.Renderer();
+renderer.heading = function (text, level) {
+  // generate an id from text
+  const id = text.toLowerCase().replace(/[^\w]+/g, '-');
+  return `<h${level} id="${id}">${text}</h${level}>`;
+};
 
-    // Event delegation for nav-links
-    if (e.target.classList.contains("nav-link")) {
-      e.preventDefault();
-      const url = e.target.getAttribute("href");
+// Function to load Markdown
+function loadMarkdown(url) {
+  fetch(url)
+    .then(res => res.text())
+    .then(md => {
+      content.innerHTML = marked.parse(md, { renderer });
+      // Attach click handlers for links inside Markdown
+      content.querySelectorAll("a").forEach(a => {
+        const href = a.getAttribute("href");
+        if (href && href.endsWith(".md")) {
+          a.addEventListener("click", (e) => {
+            e.preventDefault();
+            loadMarkdown(href);
+          });
+        }
+      });
+    })
+    .catch(err => {
+      content.innerHTML = "<p>Error loading: " + err + "</p>";
+      console.error(err);
+    });
+}
 
-      fetch(url)
-        .then(res => res.text())
-        .then(md => {
-          content.innerHTML = marked.parse(md);
-        })
-        .catch(err => {
-          content.innerHTML = "<p>Error loading: " + err + "</p>";
-          console.error(err);
-        });
-    }
-  });
+// Event delegation for sidebar
+sidebar.addEventListener("click", (e) => {
+  if (e.target.classList.contains("toggle")) {
+    e.stopPropagation();
+    const li = e.target.closest("li");
+    li.classList.toggle("open");
+  }
+
+  if (e.target.classList.contains("nav-link")) {
+    e.preventDefault();
+    const url = e.target.getAttribute("href");
+    loadMarkdown(url);
+  }
+});
+
+// Auto-load Markdown from query parameter
+window.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const autoLoad = params.get("autoload");
+  if (autoLoad) {
+    loadMarkdown("pages/" + autoLoad);
+  }
+});
 </script>
+
 
 </body>
 </html>
