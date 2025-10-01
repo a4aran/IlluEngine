@@ -216,11 +216,10 @@
 const sidebar = document.getElementById("right");
 const content = document.getElementById("content");
 
-// Add IDs to headings
+// Add IDs to headings safely using the raw text
 const renderer = new marked.Renderer();
-renderer.heading = function (text, level) {
-  // generate an id from text
-  const id = text.toLowerCase().replace(/[^\w]+/g, '-');
+renderer.heading = function (text, level, raw) {
+  const id = raw.toLowerCase().replace(/[^\w]+/g, '-');
   return `<h${level} id="${id}">${text}</h${level}>`;
 };
 
@@ -271,6 +270,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 </script>
+
 
 
 </body>
