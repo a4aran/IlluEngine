@@ -213,9 +213,10 @@
   <!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
+const sidebar = document.getElementById("right");
 const content = document.getElementById("content");
 
-// Add IDs to headings safely using the raw text
+// Add IDs to headings safely
 const renderer = new marked.Renderer();
 renderer.heading = function (text, level, raw) {
   const safeText = (raw || text || "").toString();
@@ -229,13 +230,14 @@ function loadMarkdown(url) {
     .then(res => res.text())
     .then(md => {
       content.innerHTML = marked.parse(md, { renderer });
-      // Attach click handlers for links inside Markdown to reload within content
+      // Fix links inside markdown
       content.querySelectorAll("a").forEach(a => {
         const href = a.getAttribute("href");
         if (href && href.endsWith(".md")) {
           a.addEventListener("click", (e) => {
             e.preventDefault();
-            loadMarkdown(href);
+            loadMarkdown("pages/" + href);
+            history.pushState(null, "", "?load=" + href); // update URL
           });
         }
       });
@@ -246,7 +248,27 @@ function loadMarkdown(url) {
     });
 }
 
-// Auto-load Markdown from query parameter
+// Sidebar event delegation
+sidebar.addEventListener("click", (e) => {
+  // Toggle open/close
+  if (e.target.classList.contains("toggle")) {
+    e.stopPropagation();
+    const li = e.target.closest("li");
+    li.classList.toggle("open");
+  }
+
+  // Handle GET-based links
+  if (e.target.tagName === "A") {
+    e.preventDefault();
+    const href = new URL(e.target.href).searchParams.get("load");
+    if (href) {
+      loadMarkdown("pages/" + href);
+      history.pushState(null, "", "?load=" + href); // update URL
+    }
+  }
+});
+
+// Auto-load markdown on page load
 window.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
   const load = params.get("load");
@@ -254,7 +276,15 @@ window.addEventListener("DOMContentLoaded", () => {
     loadMarkdown("pages/" + load);
   }
 });
+
+// Handle browser back/forward
+window.addEventListener("popstate", () => {
+  const params = new URLSearchParams(window.location.search);
+  const load = params.get("load");
+  if (load) loadMarkdown("pages/" + load);
+});
 </script>
+
 
 
 </body>
