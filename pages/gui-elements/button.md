@@ -71,7 +71,7 @@ class ExampleBTN(c_helper.button_base()):
         print("click!")
 ```
 Simple button printing "click!" in console when clicked.
-You can do more complicated stuff using `data`. It changes [GUI](../gui.md) `data` dict and that change can be read by the scene.
+You can do more complicated stuff using `data`. It changes [GUI](?load=gui.md) `data` dict and that change can be read by the scene.
 
 ### Text on buttons
 In order to add text to your buttons you will have to call `add_text` method on the button.

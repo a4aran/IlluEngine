@@ -176,31 +176,31 @@
   <ul>
     <li>
       <div class="row">
-        <a href="pages/home.md" class="nav-link">Home</a>
+        <a href="?load=home.md">Home</a>
       </div>
     </li>
 
     <li>
       <div class="row">
-        <a href="pages/download-and-installation.md" class="nav-link">Download & Installation</a>
+        <a href="?load=download-and-installation.md">Download & Installation</a>
       </div>
     </li>
 
     <li>
       <div class="row">
-        <a href="pages/ui.md" class="nav-link">UI</a>
+        <a href="?load=ui.md">UI</a>
         <button class="toggle"></button>
       </div>
       <ul>
         <li>
           <div class="row">
-            <a href="pages/gui.md" class="nav-link">GUI</a>
+            <a href="?load=gui.md">GUI</a>
             <button class="toggle"></button>
           </div>
           <ul>
             <li>
               <div class="row">
-                <a href="pages/gui-elements/button.md" class="nav-link">Button</a>
+                <a href="?load=gui-elements/button.md">Button</a>
               </div>
             </li>
           </ul>
@@ -213,7 +213,6 @@
   <!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
-const sidebar = document.getElementById("right");
 const content = document.getElementById("content");
 
 // Add IDs to headings safely using the raw text
@@ -230,7 +229,7 @@ function loadMarkdown(url) {
     .then(res => res.text())
     .then(md => {
       content.innerHTML = marked.parse(md, { renderer });
-      // Attach click handlers for links inside Markdown
+      // Attach click handlers for links inside Markdown to reload within content
       content.querySelectorAll("a").forEach(a => {
         const href = a.getAttribute("href");
         if (href && href.endsWith(".md")) {
@@ -247,32 +246,15 @@ function loadMarkdown(url) {
     });
 }
 
-// Event delegation for sidebar
-sidebar.addEventListener("click", (e) => {
-  if (e.target.classList.contains("toggle")) {
-    e.stopPropagation();
-    const li = e.target.closest("li");
-    li.classList.toggle("open");
-  }
-
-  if (e.target.classList.contains("nav-link")) {
-    e.preventDefault();
-    const url = e.target.getAttribute("href");
-    loadMarkdown(url);
-  }
-});
-
 // Auto-load Markdown from query parameter
 window.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
-  const autoLoad = params.get("autoload");
-  if (autoLoad) {
-    loadMarkdown("pages/" + autoLoad);
+  const load = params.get("load");
+  if (load) {
+    loadMarkdown("pages/" + load);
   }
 });
 </script>
-
-
 
 
 </body>

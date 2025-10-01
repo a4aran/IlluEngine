@@ -1,7 +1,7 @@
 # Foundation
 After *installation* there are two python files outside **Illu**/**Illusion** folder, those files being **window_size.py** and **game.py**.
 
-The first file is supposed to contain two variables: **width** and **height** that control the size of the game window. By default they're set to 600.
+The first file is supposed to contain two variables: **width** and **height** that control the size of the game window. By default, they're set to 600.
 
 The second file contains a class called **Game** which should use one of the [**Game Manager presets**](to-do). By default it uses **IllusionBuiltInsPreset** which creates an intro scene that is played when starting the game.
 
