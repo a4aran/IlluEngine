@@ -219,7 +219,8 @@ const content = document.getElementById("content");
 // Add IDs to headings safely using the raw text
 const renderer = new marked.Renderer();
 renderer.heading = function (text, level, raw) {
-  const id = raw.toLowerCase().replace(/[^\w]+/g, '-');
+  const safeText = (raw || text || "").toString();
+  const id = safeText.toLowerCase().replace(/[^\w]+/g, '-');
   return `<h${level} id="${id}">${text}</h${level}>`;
 };
 
@@ -270,6 +271,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 </script>
+
 
 
 
