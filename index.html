@@ -172,80 +172,75 @@
   </div>
 
   <!-- Sidebar -->
-  <div id="right">
-    <ul>
-      <li>
-        <div class="row">
-          <a href="pages/start.md" class="nav-link">Start</a>
-        </div>
-      </li>
-      <li>
-        <div class="row">
-          <a href="pages/download-and-installation.md" class="nav-link">Download and Installation</a>
-        </div>
-      </li>
-      <li>
-        <div class="row">
-          <a href="pages/getting-started.md" class="nav-link">Getting Started</a>
-        </div>
-      </li>
-      <li>
-        <div class="row">
-          <a href="pages/version-format.md" class="nav-link">Version Formay</a>
-        </div>
-      </li>
-      <li>
-        <div class="row">
-          <a href="pages/ui.md" class="nav-link">UI</a>
-          <button class="toggle"></button>
-        </div>
-        <ul>
-          <li>
-            <div class="row">
-              <a href="pages/gui.md" class="nav-link">GUI</a>
-              <button class="toggle"></button>
-            </div>
-            <ul>
-              <li>
-                <div class="row">
-                  <a href="pages/gui-elements/button.md" class="nav-link">Button</a>
-                </div>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </div>
+<div id="right">
+  <ul>
+    <li>
+      <div class="row">
+        <a href="pages/start.md" class="nav-link">Start</a>
+      </div>
+    </li>
+
+    <li>
+      <div class="row">
+        <a href="pages/download-and-installation.md" class="nav-link">Download & Installation</a>
+      </div>
+    </li>
+
+    <li>
+      <div class="row">
+        <a href="pages/ui.md" class="nav-link">UI</a>
+        <button class="toggle"></button>
+      </div>
+      <ul>
+        <li>
+          <div class="row">
+            <a href="pages/gui.md" class="nav-link">GUI</a>
+            <button class="toggle"></button>
+          </div>
+          <ul>
+            <li>
+              <div class="row">
+                <a href="pages/gui-elements/button.md" class="nav-link">Button</a>
+              </div>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
 
   <!-- JS -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script>
-    // obsługa toggli
-    document.querySelectorAll(".toggle").forEach(btn => {
-      btn.addEventListener("click", e => {
-        e.stopPropagation();
-        const li = btn.closest("li");
-        li.classList.toggle("open");
-      });
-    });
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+  const sidebar = document.getElementById("right");
+  const content = document.getElementById("content");
 
-    // obsługa ładowania stron markdown
-    document.querySelectorAll(".nav-link").forEach(link => {
-      link.addEventListener("click", e => {
-        e.preventDefault();
-        const url = link.getAttribute("href");
+  // Event delegation for toggle buttons
+  sidebar.addEventListener("click", (e) => {
+    if (e.target.classList.contains("toggle")) {
+      e.stopPropagation();
+      const li = e.target.closest("li");
+      li.classList.toggle("open");
+    }
 
-        fetch(url)
-          .then(res => res.text())
-          .then(md => {
-            document.getElementById("content").innerHTML = marked.parse(md);
-          })
-          .catch(err => {
-            document.getElementById("content").innerHTML = "<p>Błąd ładowania: " + err + "</p>";
-          });
-      });
-    });
-  </script>
+    // Event delegation for nav-links
+    if (e.target.classList.contains("nav-link")) {
+      e.preventDefault();
+      const url = e.target.getAttribute("href");
+
+      fetch(url)
+        .then(res => res.text())
+        .then(md => {
+          content.innerHTML = marked.parse(md);
+        })
+        .catch(err => {
+          content.innerHTML = "<p>Error loading: " + err + "</p>";
+          console.error(err);
+        });
+    }
+  });
+</script>
+
 </body>
 </html>
