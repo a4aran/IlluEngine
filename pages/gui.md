@@ -1,4 +1,4 @@
-Sub-class of [UI](https://github.com/a4aran/IlluEngine/wiki/UI)
+Sub-class of [UI](ui.md)
 
 Graphical User Interface (**GUI**)
 
@@ -14,4 +14,4 @@ It also has a dict `data` that by deafult stores:
 Which is used for changing scenes
 
 GUI Elements:
-- [Button](https://github.com/a4aran/IlluEngine/wiki/Button)
+- [Button](gui-elements/button.md)

@@ -15,4 +15,4 @@ After adding the engine into your project folder you can run `python -m run.py` 
 # Updating
 
 Updating the `su` versions of the engine works by pasting the newer version into the project folder.
-Adviced to only update the **Illusion package**. Other files can be safely updated after your revision.
+Advised to only update the **Illusion package**. Other files can be safely updated after your revision.
