@@ -268,7 +268,7 @@ document.querySelectorAll("#right a").forEach(link => {
       .catch(err => {
         left.textContent = "Could not load md";
         console.error(err);
-      });
+      }).then(()=>{addHeaderIds()});
   });
 });
 
