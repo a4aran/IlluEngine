@@ -214,7 +214,7 @@
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
 const params = new URLSearchParams(window.location.search);
-const to_load = params.get("load")
+const file = params.get("load")
 const left = document.getElementById("markdown-box")
 if (file){
   fetch(`markdown-docs/${file}.md`).then(res =>{
