@@ -209,20 +209,34 @@
   <!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
-const params = new URLSearchParams(window.location.search);
-const file = params.get("load")
 const left = document.getElementById("markdown-box")
-if (file){
-  fetch(`markdown-docs/${file}.md`).then(res =>{
-    if (!res.ok) throw new Error("File not found")
-    return res.text();
-  }).then(md =>{
-    left.innerHTML = marked.parse(md)
-  }).catch(err=>{
-    left.textContent = "Could not load md"
-    console.error(err)
-  })
-}
+document.querySelectorAll("#right a").forEach(link => {
+  link.addEventListener("click", event => {
+    event.preventDefault(); // prevent page reload
+
+    const url = new URL(link.href);
+    const fileParam = url.searchParams.get("load");
+
+    if (!fileParam) return;
+
+    // Update URL without reloading the page
+    history.pushState(null, "", `?load=${fileParam}`);
+
+    // Load the markdown content dynamically
+    fetch(`markdown-docs/${fileParam}.md`)
+      .then(res => {
+        if (!res.ok) throw new Error("File not found");
+        return res.text();
+      })
+      .then(md => {
+        left.innerHTML = marked.parse(md);
+      })
+      .catch(err => {
+        left.textContent = "Could not load md";
+        console.error(err);
+      });
+  });
+});
 
 document.querySelectorAll(".toggle").forEach(button =>{
   button.textContent = "▼"
@@ -237,6 +251,7 @@ document.querySelectorAll(".toggle").forEach(button =>{
       content.style.display = "none"
       button.textContent = "▼"
     }
+    event.stopPropagation();
   })
 })
 </script>
