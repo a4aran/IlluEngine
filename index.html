@@ -271,7 +271,7 @@ document.querySelectorAll("#right a").forEach(link => {
     history.pushState(null, "", `?load=${fileParam}`);
 
     // Load the markdown content dynamically
-    fetch(`markdown-docs/${fileParam}`)
+    fetch(`markdown-docs/${fileParam}.md`)
       .then(res => {
         if (!res.ok) throw new Error("File not found");
         return res.text();
