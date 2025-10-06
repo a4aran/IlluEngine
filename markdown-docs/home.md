@@ -8,7 +8,7 @@ In order to install **Illu Engine** you need to install **python** first, click 
 
 Next you'll need to install **pygame** (pygame-ce should work), to install it click [here](https://www.pygame.org/wiki/GettingStarted) for guide
 
-Next you'll need to download **Illu** itself, click [here](?load=download-and-installation.md) and follow the download guide on the site
+Next you'll need to download **Illu** itself, click [here](?load=download-and-installation) and follow the download guide on the site
 
 ## How to update?
 When you wnat to update to a newer version you should only copy in the **Illusion package** from the zip file.

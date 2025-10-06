@@ -1,4 +1,4 @@
-Sub-class of [UI](?load=ui.md)
+Sub-class of [UI](?load=ui)
 
 Graphical User Interface (**GUI**)
 
@@ -14,4 +14,4 @@ It also has a dict `data` that by deafult stores:
 Which is used for changing scenes
 
 GUI Elements:
-- [Button](?load=gui-elements/button.md)
+- [Button](?load=gui-elements/button)
