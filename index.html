@@ -100,20 +100,20 @@
   </style>
   <style>
   /* General Markdown content */
-  #content {
+  #markdown-box {
     font-family: 'Noto Sans JP', sans-serif;
     line-height: 1.6;
     color: #222;
   }
 
   /* Headings */
-  #content h1 {
+  #markdown-box h1 {
     font-size: 2.5em;
     margin-bottom: 0.5em;
     border-bottom: 2px solid #ccc;
     padding-bottom: 0.2em;
   }
-  #content h2 {
+  #markdown-box h2 {
     font-size: 2em;
     margin-top: 1em;
     margin-bottom: 0.5em;
@@ -121,37 +121,37 @@
   }
 
   /* Paragraphs */
-  #content p {
+  #markdown-box p {
     margin-bottom: 1em;
   }
 
   /* Links from Markdown */
-  #content a {
+  #markdown-box a {
     color: #0077cc;
     text-decoration: none;
     font-weight: bold;
     transition: color 0.2s;
   }
-  #content a:hover {
+  #markdown-box a:hover {
     color: #005599;
     text-decoration: underline;
   }
 
   /* Lists */
-  #content ul, #content ol {
+  #markdown-box ul, #markdown-box ol {
     margin-left: 1.5em;
     margin-bottom: 1em;
   }
 
   /* Code blocks */
-  #content code {
+  #markdown-box code {
     background-color: #f4f4f4;
     padding: 2px 5px;
     border-radius: 3px;
     font-family: monospace;
   }
 
-  #content pre {
+  #markdown-box pre {
     background-color: #f4f4f4;
     padding: 10px;
     border-radius: 5px;
@@ -163,7 +163,7 @@
   <!-- Główna treść -->
   <div id="left">
     <h1>Illu Engine Documentation</h1>
-    <div id="content">
+    <div id="markdown-box">
       <p>Welcome to Illu Engine Documentation</p>
       <p>Here you'll be able to find everything you'll need for developing with Illu</p>
       <p>On right side you'll see a sidebar with entries, click on the one you're interested in and read!</p>
@@ -176,31 +176,31 @@
   <ul>
     <li>
       <div class="row">
-        <a href="?load=home.md">Home</a>
+        <a href="?load=home">Home</a>
       </div>
     </li>
 
     <li>
       <div class="row">
-        <a href="?load=download-and-installation.md">Download & Installation</a>
+        <a href="?load=download-and-installation">Download & Installation</a>
       </div>
     </li>
 
     <li>
       <div class="row">
-        <a href="?load=ui.md">UI</a>
+        <a href="?load=ui">UI</a>
         <button class="toggle"></button>
       </div>
       <ul>
         <li>
           <div class="row">
-            <a href="?load=gui.md">GUI</a>
+            <a href="?load=gui">GUI</a>
             <button class="toggle"></button>
           </div>
           <ul>
             <li>
               <div class="row">
-                <a href="?load=gui-elements/button.md">Button</a>
+                <a href="?load=gui-elements/button">Button</a>
               </div>
             </li>
           </ul>
@@ -213,77 +213,20 @@
   <!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
-const sidebar = document.getElementById("right");
-const content = document.getElementById("content");
-
-// Create a Slugger instance for unique header IDs
-const slugger = new marked.Slugger();
-
-// Renderer that assigns IDs to headers
-const renderer = new marked.Renderer();
-renderer.heading = function (text, level) {
-  const id = slugger.slug(text); // generate safe id
-  return `<h${level} id="${id}">${text}</h${level}>`;
-};
-
-// Function to load Markdown
-function loadMarkdown(url) {
-  fetch(url)
-    .then(res => res.text())
-    .then(md => {
-      content.innerHTML = marked.parse(md, { renderer });
-
-      // Fix links inside markdown to load via ?load=
-      content.querySelectorAll("a").forEach(a => {
-        const href = a.getAttribute("href");
-        if (href && href.endsWith(".md")) {
-          a.addEventListener("click", e => {
-            e.preventDefault();
-            loadMarkdown("pages/" + href);
-            history.pushState(null, "", "?load=" + href); // update URL
-          });
-        }
-      });
-    })
-    .catch(err => {
-      content.innerHTML = "<p>Error loading: " + err + "</p>";
-      console.error(err);
-    });
+const params = new URLSearchParams(window.location.search);
+const to_load = params.get("load")
+const left = document.getElementById("markdown-box")
+if (file){
+  fetch(`markdown-docs/${file}.md`).then(res =>{
+    if (!res.ok) throw new Error("File not found")
+    return res.text();
+  }).then(md =>{
+    left.innerHTML = marked.parse(md)
+  }).catch(err=>{
+    left.textContent = "Could not load md"
+    console.error(err)
+  })
 }
-
-// Sidebar click delegation
-sidebar.addEventListener("click", e => {
-  // Toggle open/close
-  if (e.target.classList.contains("toggle")) {
-    e.stopPropagation();
-    const li = e.target.closest("li");
-    li.classList.toggle("open");
-  }
-
-  // GET-based link handling
-  if (e.target.tagName === "A") {
-    e.preventDefault();
-    const href = new URL(e.target.href).searchParams.get("load");
-    if (href) {
-      loadMarkdown("pages/" + href);
-      history.pushState(null, "", "?load=" + href);
-    }
-  }
-});
-
-// Auto-load Markdown from query parameter
-window.addEventListener("DOMContentLoaded", () => {
-  const params = new URLSearchParams(window.location.search);
-  const load = params.get("load");
-  if (load) loadMarkdown("pages/" + load);
-});
-
-// Handle browser back/forward buttons
-window.addEventListener("popstate", () => {
-  const params = new URLSearchParams(window.location.search);
-  const load = params.get("load");
-  if (load) loadMarkdown("pages/" + load);
-});
 </script>
 
 
