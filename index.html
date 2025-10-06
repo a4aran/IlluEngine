@@ -301,6 +301,38 @@ rightSidebar.addEventListener('mouseleave', () => {
   overlay.style.opacity = '0';
   overlay.style.pointerEvents = 'none';
 });
+function generateHeaderId(headerText) {
+      // Convert the text to lowercase, replace non-alphanumeric chars with dashes, and remove leading/trailing spaces
+      return headerText.toLowerCase()
+        .replace(/[^\w\s-]/g, '')  // Remove non-alphanumeric characters
+        .replace(/\s+/g, '-')      // Replace spaces with dashes
+        .replace(/^-+/, '')        // Remove leading dashes
+        .replace(/-+$/, '');       // Remove trailing dashes
+    }
+
+    // Function to add IDs to all headers
+    function addHeaderIds() {
+      const headers = document.querySelectorAll('#markdown-box h1, #markdown-box h2, #markdown-box h3, #markdown-box h4, #markdown-box h5, #markdown-box h6');
+      const seenIds = {};  // To track duplicates
+
+      headers.forEach((header, index) => {
+        const text = header.textContent.trim();
+        let id = generateHeaderId(text);
+
+        // Handle duplicate IDs by appending a counter
+        if (seenIds[id]) {
+          seenIds[id]++;
+          id = `${id}-${seenIds[id]}`;  // Append counter to the ID
+        } else {
+          seenIds[id] = 1;
+        }
+
+        header.id = id;
+      });
+    }
+
+    // Wait for the DOM to be fully loaded, then add the IDs to headers
+    document.addEventListener('DOMContentLoaded', addHeaderIds);
 </script>
 
 
