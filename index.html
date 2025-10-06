@@ -6,6 +6,9 @@
   <title>IlluEngine - Documentation</title>
   <link rel="stylesheet" href="./assets/vars.css">
   <style>
+    :root{
+      --bg-gray: #ddd;
+    }
     * {
       box-sizing: border-box;
       margin: 0;
@@ -24,12 +27,12 @@
     }
 
     #left {
-      width: 70%;
+      width: 95%;
       height: 100vh;
       overflow-y: auto;
       padding: 20px;
     }
-
+    
     #left h1 {
       text-align: center;
       font-size: 48px;
@@ -37,12 +40,42 @@
     }
     
     #right {
-      width: 30%;
+      background-color: var(--bg-gray);
+      position: fixed;
+      width: 5%;
       border-left: 2px solid rgb(107, 107, 107);
       height: 100vh;
       box-shadow: 0px 5px 5px black;
       overflow-y: auto;
       padding: 10px;
+      transition: 400ms;
+      right: 0;
+      overflow-x: hidden;
+    }
+    #right:hover{
+      background-color: #fff;
+      width: 40%;
+    }
+    #right *{
+      opacity: 0;
+      transition: 400ms;
+    }
+
+    #right:hover *{
+      opacity: 1;
+    }
+
+    #overlay{
+      width: 100vw;
+      height: 100vh;
+      background-color: #000;
+      opacity: 0;
+      position: fixed;
+      transition: 400ms;
+    }
+    #right:hover + #overlay {
+      opacity: 0.5;
+      pointer-events: auto;
     }
 
     ul {
@@ -167,6 +200,7 @@
     </div>
   </div>
 
+  <div id="overlay"></div>
   <!-- Sidebar -->
 <div id="right">
   <ul>
@@ -254,6 +288,19 @@ document.querySelectorAll(".toggle").forEach(button =>{
     event.stopPropagation();
   })
 })
+const rightSidebar = document.getElementById('right');
+const overlay = document.getElementById('overlay');
+
+// Add event listener for hover
+rightSidebar.addEventListener('mouseenter', () => {
+  overlay.style.opacity = '0.5';
+  overlay.style.pointerEvents = 'auto';
+});
+
+rightSidebar.addEventListener('mouseleave', () => {
+  overlay.style.opacity = '0';
+  overlay.style.pointerEvents = 'none';
+});
 </script>
 
 
