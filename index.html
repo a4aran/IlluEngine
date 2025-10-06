@@ -91,6 +91,9 @@
     li.open > ul {
       display: block;
     }
+    .foldable{
+      display: none;
+    }
   </style>
   <style>
   #markdown-box {
@@ -184,13 +187,13 @@
         <a href="?load=ui">UI</a>
         <button class="toggle"></button>
       </div>
-      <ul>
+      <ul class="foldable">
         <li>
           <div class="row">
             <a href="?load=gui">GUI</a>
             <button class="toggle"></button>
           </div>
-          <ul>
+          <ul class="foldable">
             <li>
               <div class="row">
                 <a href="?load=gui-elements/button">Button</a>
