@@ -347,6 +347,29 @@ function generateHeaderId(headerText) {
 
     // Wait for the DOM to be fully loaded, then add the IDs to headers
     document.addEventListener('DOMContentLoaded', addHeaderIds);
+    document.addEventListener('DOMContentLoaded', () => {
+      const url = new URL(link.href);
+    const fileParam = url.searchParams.get("load");
+
+    if (!fileParam) return;
+
+    // Update URL without reloading the page
+    history.pushState(null, "", `?load=${fileParam}`);
+
+    // Load the markdown content dynamically
+    fetch(`markdown-docs/${fileParam}.md`)
+      .then(res => {
+        if (!res.ok) throw new Error("File not found");
+        return res.text();
+      })
+      .then(md => {
+        left.innerHTML = marked.parse(md);
+      })
+      .catch(err => {
+        left.textContent = "Could not load md";
+        console.error(err);
+      }).then(()=>{addHeaderIds()});
+    });
 </script>
 
 
