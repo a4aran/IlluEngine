@@ -29,3 +29,5 @@ Empty `{}` will make it deafult to:
 - color: `rgb(0,0,0)` - black
 - size: `24`
 - font: first font in the dict
+
+There's also a method in [Helper/c_helper](?load=helper-c-helper) called `[to_format_string](?load=helper-c-helper#string-formatting-method)` which generates the formatting so you don't have to mannually write it.
