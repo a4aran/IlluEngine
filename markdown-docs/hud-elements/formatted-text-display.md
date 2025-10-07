@@ -1,4 +1,4 @@
-**Formatted Text Display** is an element of [HUD](?load=hud) based on [Text Display](?load=text-display)
+**Formatted Text Display** is an element of [HUD](?load=hud) based on [Text Display](?load=hud-elements/text-display)
 
 It's creator requires:
 - name: `string`, for identification
@@ -6,7 +6,7 @@ It's creator requires:
 - center_pos: `(float,float)`, center position of of the displayed text
 
 It only has `set_text` from methods that change its properities as styling is handeled inside the string.
-Shares its `set_pos`.`toggle_constant_y_pos`,`set_constant_y_pos` and `get_text` methods with [Text Display](?load=text-display).
+Shares its `set_pos`.`toggle_constant_y_pos`,`set_constant_y_pos` and `get_text` methods with [Text Display](?load=hud-elements/text-display).
 > Note: `get_text` will return the same list as the one passed, with formatting characters
 
 ## Formatting
