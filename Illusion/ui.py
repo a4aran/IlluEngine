@@ -352,6 +352,9 @@ class UI:
             def set_constant_y_pos(self,y:float):
                 self.__constant_y = y
 
+            def get_text(self):
+                return self.__unformatted_text
+
         class Animation:
             def __init__(self,name: str,center_pos: tuple[float,float],sprites: list,fps:int,play_amount:int = 0):
                 self.name = name
