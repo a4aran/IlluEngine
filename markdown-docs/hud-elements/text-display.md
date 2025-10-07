@@ -53,4 +53,4 @@ There are 2 methods for managing it:
 
 `get_text` - returns the **text** list of the **Text Display**
 
-See also [Formatted Text Display](?load=formatted-text-display)
+See also [Formatted Text Display](?load=hud-elements/formatted-text-display)
