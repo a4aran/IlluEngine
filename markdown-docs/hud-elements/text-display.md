@@ -52,3 +52,5 @@ There are 2 methods for managing it:
 ### Misc
 
 `get_text` - returns the **text** list of the **Text Display**
+
+See also [Formatted Text Display](?load=formatted-text-display)
