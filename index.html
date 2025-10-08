@@ -322,11 +322,13 @@ const overlay = document.getElementById('overlay');
 rightSidebar.addEventListener('mouseenter', () => {
   overlay.style.opacity = '0.5';
   overlay.style.pointerEvents = 'auto';
+  overlay.style.display = 'block';
 });
 
 rightSidebar.addEventListener('mouseleave', () => {
   overlay.style.opacity = '0';
   overlay.style.pointerEvents = 'none';
+  overlay.style.display = 'none';
 });
 function generateHeaderId(headerText) {
       // Convert the text to lowercase, replace non-alphanumeric chars with dashes, and remove leading/trailing spaces
