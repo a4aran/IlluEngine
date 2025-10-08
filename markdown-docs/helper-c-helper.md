@@ -20,7 +20,7 @@ After asiging all a `pygame.Rect` to your `hover_box` you'll want to make a meth
 ### Timer Class
 `Timer` class was made with intention to make object of its type. The way it works is, when you're creating the object you'll put a `float` that is time in seconds. After that you'll be able to call several methods on the timer.
 
-#### `Timer` methods:
+#### Timer's methods:
 - `start` - starts the timer
 - `stop` - stops the timer without resetting the progress/countdown
 - `update` - accepts `float`, more specifically delta time which you can get using something like `frame_data.dt` (the object name can change depending on what you call it inside your methods/functions, what's important is that that object is an instance of [Frame Data](?load=frame-data).
@@ -37,4 +37,5 @@ This method accepts:
 - size: `int`
 - font_name: `string`
 - text: `string`, the text that will be then returned in formatted way
+
 It is meant to be used for [Formatted Text Display](?load=hud-elements/formatted-text-display) objects when passing text to it. It makes it easier to format the text as you don't need to manually write the formatting.
