@@ -23,7 +23,7 @@ Expected types of values:
 - size: `int`
 - font: `string`, name of the font/[Text Renderer](?load=text-renderer) in the dict you've passed when creating the object
 
-Example string: `"{c:(255,0,0),s:40,f:font1}Example text"` → <span style="color: rgb(255,0,0), font-size:40px">Example text</span>
+Example string: `"{c:(255,0,0),s:40,f:font1}Example text"`
 
 Empty `{}` will make it deafult to:
 - color: `rgb(0,0,0)` - black
