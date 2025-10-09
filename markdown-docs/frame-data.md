@@ -1,4 +1,4 @@
-**Frame Data** is a class in a file called `framw_data_f` in **Illusion** package.
+**Frame Data** is a class in a file called `frame_data_f` in **Illusion** package.
 It's purpose is to have all the data of the frame like delta time or mouseposition. Those are updated every frame inside the main loop.
 
 It has no methods (beside `reset_mbtn` which is also called every frame so there's no need for you to use it), al you need is stored as fields.
