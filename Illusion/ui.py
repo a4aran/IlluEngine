@@ -352,9 +352,6 @@ class UI:
             def set_constant_y_pos(self,y:float):
                 self.__constant_y = y
 
-            def get_text(self):
-                return self.__unformatted_text
-
         class Animation:
             def __init__(self,name: str,center_pos: tuple[float,float],sprites: list,fps:int,play_amount:int = 0):
                 self.name = name
@@ -388,6 +385,38 @@ class UI:
 
             def is_done(self):
                 return self.play_count[1]
+
+        class BarDisplay:
+            def __init__(self,name:str,bar_bg: pygame.Surface, full_bar_img: pygame.Surface,center_pos: tuple[float,float],constant_y_pos = None):
+                self.name = name
+                self.__images = [bar_bg,full_bar_img]
+                self.__c_pos = center_pos
+                self.__top_left_pos = None
+                self.__use_constant_y = constant_y_pos is not None
+                self.__constant_y = constant_y_pos
+                self.__is_horizontal = True
+                self.__fullness = 1
+                self.__full_img_offset = (0,0)
+
+            def draw(self,surface: pygame.Surface):
+                temp = pygame.Surface(
+                    (
+                        max(self.__images[0].get_width(),self.__images[1].get_width()),
+                        max(self.__images[0].get_height(),self.__images[1].get_height())
+                    ),
+                    pygame.SRCALPHA
+                )
+                temp.blit(self.__images[0],(0,0))
+                temp_rect = self.__images[1].get_rect()
+                temp_rect.width *= round(self.__fullness,3)
+                temp.blit(self.__images[1],self.__full_img_offset,temp_rect)
+                if self.__top_left_pos is None: self.__top_left_pos = (
+                    self.__c_pos[0] - temp.get_width()/2,
+                    self.__c_pos[1] - temp.get_height()/2 if not self.__use_constant_y else self.__constant_y - temp.get_height()/2,
+                )
+
+                surface.blit(temp,self.__top_left_pos)
+
 
         def add_img(self,img: pygame.Surface):
             self.surface_s.append(img)
@@ -444,7 +473,6 @@ class UI:
                 print("'"+name+"' formatted text display not found")
                 return
             return self.surface_s[i]
-
 
     class _GUI:
         def __init__(self):
