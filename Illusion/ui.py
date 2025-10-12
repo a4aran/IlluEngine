@@ -628,6 +628,18 @@ class UI:
             )
         )
 
+    def new_bar_display(self,name:str,bar_background: pygame.Surface, full_bar_image: pygame.Surface,
+                        center_pos: tuple[float,float],constant_y_pos: float = None):
+        self._hud.surface_s.append(
+            self._hud.BarDisplay(
+                name,
+                bar_background,
+                full_bar_image,
+                center_pos,
+                constant_y_pos
+            )
+        )
+
     def new_animation(self,name:str,sprites: list,center_pos: pygame.Vector2,fps:int,play_count: int = 0):
         self._hud.surface_s.append(
             self._hud.Animation(
