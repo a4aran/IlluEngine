@@ -75,12 +75,10 @@
       opacity: 0;
       position: fixed;
       transition: 400ms;
-      display: none;
     }
     #right:hover + #overlay {
       opacity: 0.5;
       pointer-events: auto;
-      display: block;
     }
 
     ul {
@@ -221,16 +219,7 @@
         <a href="?load=download-and-installation">Download & Installation</a>
       </div>
     </li>
-      <li>
-      <div class="row">
-        <a href="?load=getting-started">Getting Started</a>
-      </div>
-    </li>
-      <li>
-      <div class="row">
-        <a href="?load=frame-data">Frame Data</a>
-      </div>
-    </li>
+
     <li>
       <div class="row">
         <a href="?load=ui">UI</a>
@@ -259,39 +248,9 @@
                 <a href="?load=hud-elements/text-display">Text Display</a>
               </div>
             </li>
-            <li>
-              <div class="row">
-                <a href="?load=hud-elements/formatted-text-display">Formatted Text Display</a>
-              </div>
-            </li>
           </ul>
         </li>
       </ul>
-    </li>
-          <li>
-      <div class="row">
-        <a href="?load=global-objects">Global Objects</a>
-      </div>
-    </li>
-      <li>
-      <div class="row">
-        <a href="?load=helper-c-helper">Helper/c_helper</a>
-      </div>
-    </li>
-      <li>
-      <div class="row">
-        <a href="?load=text-renderer">Text Renderer</a>
-      </div>
-    </li>
-          <li>
-      <div class="row">
-        <a href="?load=game-game-manager">Game/Game Manager</a>
-      </div>
-    </li>
-        <li>
-      <div class="row">
-        <a href="?load=version-format">Version Format</a>
-      </div>
     </li>
   </ul>
 </div>
@@ -299,106 +258,6 @@
   <!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
-
-const navigationString = `
-Home(?load=home)
-Download & Installation(?load=download-and-installation)
-Getting Started(?load=getting-started)
-Frame Data(?load=frame-data)
-UI(?load=ui)
--GUI(?load=gui)
---Button(?load=gui-elements/button)
--HUD(?load=hud)
---Text Display(?load=hud-elements/text-display)
---Formatted Text Display(?load=hud-elements/formatted-text-display)
-`
-
-function generateNavigation(navString) {
-  const lines = navString.trim().split("\n");
-  const root = document.getElementById("right").querySelector("ul");
-
-  let currentList = root;
-  let currentIndentLevel = 0;
-
-  // Regular expression to capture the name and link from the format `name(link)`
-  const regex = /^(.*)\((.*)\)$/;
-
-  lines.forEach(line => {
-    const indentLevel = line.search(/\S/); // Get the number of leading spaces
-    const itemText = line.trim();
-
-    // Match the line against the regex to extract the name and the link
-    const match = itemText.match(regex);
-    let itemName = itemText;
-    let itemLink = `#${itemName.replace(/\s+/g, '-').toLowerCase()}`;
-
-    if (match) {
-      itemName = match[1].trim();  // The name of the item
-      itemLink = match[2].trim();  // The link inside parentheses
-    }
-
-    // Create a new <li> for each item
-    const newItem = document.createElement("li");
-    const row = document.createElement("div");
-    row.className = "row";
-
-    const link = document.createElement("a");
-    link.href = itemLink;  // Use the extracted link
-    link.textContent = itemName;  // Display the item name
-
-    row.appendChild(link);
-    newItem.appendChild(row);
-
-    // Handle foldable items (those with leading '-')
-    if (indentLevel > 0 && itemText.startsWith("-")) {
-      // Make this item foldable
-      const foldableList = document.createElement("ul");
-      foldableList.classList.add("foldable");
-
-      newItem.appendChild(foldableList);
-
-      // Create a toggle button
-      const toggleButton = document.createElement("button");
-      toggleButton.classList.add("toggle");
-      toggleButton.textContent = "⋁";  // Start as collapsed
-      row.appendChild(toggleButton);
-
-      toggleButton.addEventListener("click", () => {
-        const foldable = newItem.querySelector("ul");
-        if (foldable.style.display === "none" || foldable.style.display === "") {
-          foldable.style.display = "block";
-          toggleButton.textContent = "⋀";  // Change to expanded
-        } else {
-          foldable.style.display = "none";
-          toggleButton.textContent = "⋁";  // Change to collapsed
-        }
-        event.stopPropagation();  // Prevent triggering the parent click event
-      });
-
-      // Set the list to be initially hidden
-      foldableList.style.display = "none";
-
-      // Append to the parent list, not the root
-      currentList.appendChild(newItem);
-      currentList = foldableList;  // Update to the new foldable list for deeper items
-
-    } else if (indentLevel === 0) {
-      // Non-foldable item, add to root or upper list
-      currentList.appendChild(newItem);
-      currentList = newItem.querySelector("ul") || currentList;  // Move to nested list if any
-    } else {
-      // Handle deeper indentations normally
-      currentList.appendChild(newItem);
-      currentList = newItem.querySelector("ul") || currentList;
-    }
-  });
-}
-
-// Initialize the navigation
-document.addEventListener("DOMContentLoaded", () => {
-  generateNavigation(navigationString);
-});
-
 const left = document.getElementById("markdown-box")
 document.querySelectorAll("#right a").forEach(link => {
   link.addEventListener("click", event => {
@@ -451,13 +310,11 @@ const overlay = document.getElementById('overlay');
 rightSidebar.addEventListener('mouseenter', () => {
   overlay.style.opacity = '0.5';
   overlay.style.pointerEvents = 'auto';
-  overlay.style.display = 'block';
 });
 
 rightSidebar.addEventListener('mouseleave', () => {
   overlay.style.opacity = '0';
   overlay.style.pointerEvents = 'none';
-  overlay.style.display = 'none';
 });
 function generateHeaderId(headerText) {
       // Convert the text to lowercase, replace non-alphanumeric chars with dashes, and remove leading/trailing spaces
