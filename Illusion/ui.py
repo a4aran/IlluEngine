@@ -20,6 +20,60 @@ class UI:
         def __init__(self):
             self.surface_s = []
 
+        class DynamicParallax:
+            def __init__(self,name: str, top_left: tuple[float,float],img: pygame.Surface,size: tuple[int,int],
+                         direction: int = 0):
+                self.name = name
+                self.parallax_pos = pygame.Vector2(top_left)
+                self.img_pos = 0
+                self.img = img
+                self.parallax_window_size = size
+                self.direction = direction
+
+            def move(self,amount:int):
+                self.img_pos += amount
+
+            def update(self,frame_data: FrameData):
+                axis_size = self.img.get_width()
+                if self.direction == 2 or self.direction == 3:
+                    axis_size = self.img.get_height()
+                if self.img_pos >= axis_size: self.img_pos = 0
+
+            def gen_frame(self):
+                r_surf = pygame.Surface(self.parallax_window_size,SRCALPHA)
+                if self.direction == 0 or self.direction == 1:
+                    img_width = self.img.get_width()
+                    repetitions = 2 + int(self.parallax_window_size[0] % img_width)
+                    if self.direction == 0:
+                        loc_pos = self.img_pos - img_width
+                        for q in range(repetitions):
+                            r_surf.blit(self.img,(loc_pos,0))
+                            loc_pos += img_width
+                    else:
+                        loc_pos = r_surf.get_width() + img_width - self.img_pos
+                        for q in range(repetitions):
+                            r_surf.blit(self.img,(loc_pos,0))
+                            loc_pos -= img_width
+
+                elif self.direction == 2 or self.direction == 3:
+                    img_height = self.img.get_height()
+                    repetitions = 1 + int(self.parallax_window_size[1] % img_height)
+                    if self.direction == 2:
+                        loc_pos = self.img_pos - img_height
+                        for q in range(repetitions):
+                            r_surf.blit(self.img,(0,loc_pos))
+                            loc_pos += img_height
+                    else:
+                        loc_pos = r_surf.get_width() + img_height - self.img_pos
+                        for q in range(repetitions):
+                            r_surf.blit(self.img,(0,loc_pos))
+                            loc_pos -= img_height
+
+                return  r_surf.convert_alpha()
+
+            def draw(self,surface: pygame.Surface):
+                surface.blit(self.gen_frame(), self.parallax_pos)
+
         class Parallax:
             def __init__(self,name: str, top_left:tuple[float,float],img: pygame.Surface,
                          speed: float,size: tuple[float,float],direction: int = 0,step: float = 0):
