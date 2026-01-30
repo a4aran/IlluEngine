@@ -1,3 +1,5 @@
+from typing import Type
+
 import pygame
 
 import window_size
@@ -25,6 +27,9 @@ class GameManagerPreset:
 
     def update_and_draw(self,frame_data: FrameData,surface: pygame.Surface):
         self._scene_manager.update_and_draw(frame_data,surface)
+
+    def new_scene(self,scene: Type[Scene]):
+        self._scene_manager.add_scene(scene(self._importer,self._assets,self._music_manager,self._global_objects))
 
 class IllusionBuiltInsPreset(GameManagerPreset):
     def __init__(self,hardware_sound: bool):
